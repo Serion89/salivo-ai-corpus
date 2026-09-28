@@ -1,0 +1,35 @@
+module corpus.security.hmac;
+
+><salivo.std.core::{outln};
+><salivo.std.crypto::{hmacSha256Hex, constantTimeEq};
+
+pub func signMessage(secret_key: string, message: string) -> string {
+    return hmacSha256Hex(secret_key, message);
+}
+
+pub func verifySignature(secret_key: string, message: string, expected_sig: string) -> bool {
+    let computed_sig = hmacSha256Hex(secret_key, message);
+    return constantTimeEq(computed_sig, expected_sig);
+}
+
+pub func main() -> int {
+    let key = "super-secret-signing-key";
+    let body = "{\"user_id\": 109, \"action\": \"transfer_funds\"}";
+
+    let signature = signMessage(key, body);
+    outln($"Computed HMAC: {signature}");
+
+    let is_valid = verifySignature(key, body, signature);
+    if (is_valid) {
+        outln("Signature verification: SUCCESS");
+    } else {
+        outln("Signature verification: FAILED");
+    }
+
+    let is_tampered = verifySignature(key, "{\"user_id\": 999}", signature);
+    if (!is_tampered) {
+        outln("Tampered payload rejected: SUCCESS");
+    }
+
+    return 0;
+}

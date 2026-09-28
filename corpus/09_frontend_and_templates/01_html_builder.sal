@@ -1,0 +1,36 @@
+module corpus.frontend.htmlbuilder;
+
+><salivo.std.core::{outln};
+
+pub func tag(name: string, content: string) -> string {
+    return $"<{name}>{content}</{name}>";
+}
+
+pub func tagWithClass(name: string, class_name: string, content: string) -> string {
+    return $"<{name} class=\"{class_name}\">{content}</{name}>";
+}
+
+pub func link(url: string, text: string) -> string {
+    return $"<a href=\"{url}\" target=\"_blank\">{text}</a>";
+}
+
+pub func buildArticle(title: string, author: string, body_text: string) -> string {
+    let h1 = tagWithClass("h1", "article-title", title);
+    let p_author = tagWithClass("p", "article-author", $"By {author}");
+    let p_body = tagWithClass("p", "article-body", body_text);
+
+    let content = $"\n    {h1}\n    {p_author}\n    {p_body}\n  ";
+    return tagWithClass("article", "card container", content);
+}
+
+pub func main() -> int {
+    let article_html = buildArticle(
+        "Next-Gen Systems Programming in Salivo",
+        "Salivo Architecture Team",
+        "Salivo combines memory safety, deterministic RAII, and extreme execution speed."
+    );
+
+    outln("Rendered HTML Document fragment:");
+    outln(article_html);
+    return 0;
+}

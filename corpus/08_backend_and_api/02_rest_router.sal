@@ -1,0 +1,59 @@
+module corpus.backend.restrouter;
+
+><salivo.std.core::{outln};
+
+pub enum RouteAction {
+    GetUsers,
+    CreateUser,
+    GetHealth,
+    NotFound
+}
+
+pub struct ApiRequest {
+    string method;
+    string path;
+}
+
+pub struct ApiResponse {
+    int status_code;
+    string body;
+}
+
+pub func matchRoute(req: ApiRequest) -> RouteAction {
+    if (req.method == "GET" && req.path == "/api/health") {
+        return RouteAction::GetHealth;
+    }
+    if (req.method == "GET" && req.path == "/api/users") {
+        return RouteAction::GetUsers;
+    }
+    if (req.method == "POST" && req.path == "/api/users") {
+        return RouteAction::CreateUser;
+    }
+    return RouteAction::NotFound;
+}
+
+pub func handleRequest(req: ApiRequest) -> ApiResponse {
+    let action = matchRoute(req);
+    return match action {
+        RouteAction::GetHealth => ApiResponse { status_code: 200, body: "{\"status\": \"healthy\"}" },
+        RouteAction::GetUsers => ApiResponse { status_code: 200, body: "[{\"id\": 1, \"name\": \"Admin\"}]" },
+        RouteAction::CreateUser => ApiResponse { status_code: 201, body: "{\"created\": true, \"id\": 2}" },
+        RouteAction::NotFound => ApiResponse { status_code: 404, body: "{\"error\": \"Route not found\"}" },
+    };
+}
+
+pub func main() -> int {
+    let req1 = ApiRequest { method: "GET", path: "/api/health" };
+    let req2 = ApiRequest { method: "POST", path: "/api/users" };
+    let req3 = ApiRequest { method: "DELETE", path: "/api/unknown" };
+
+    let res1 = handleRequest(req1);
+    let res2 = handleRequest(req2);
+    let res3 = handleRequest(req3);
+
+    outln($"Route 1 Response: {res1.status_code:str} -> {res1.body}");
+    outln($"Route 2 Response: {res2.status_code:str} -> {res2.body}");
+    outln($"Route 3 Response: {res3.status_code:str} -> {res3.body}");
+
+    return 0;
+}

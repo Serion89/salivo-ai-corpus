@@ -2,9 +2,7 @@
 """
 Automated compiler verification runner for Salivo AI Corpus.
 Strictly enforces the Stage 3 Self-Hosted Compiler (salivoc.exe).
-Performs 2-stage verification on every .sal file:
-  Stage 1: Syntax & Semantic Check (sf check)
-  Stage 2: Full Stage-3 Native Compilation & Execution (sf run --compiler stage3)
+Fails if Stage-3 falls back to Rust or if any check fails.
 """
 
 import os
@@ -18,7 +16,6 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
 
-# Enforce Stage-3 compiler environment
 os.environ["SALIVO_COMPILER"] = "stage3"
 
 DEFAULT_SF = r"C:\Users\sahil\.salivo\bin\sf.exe"
@@ -44,7 +41,7 @@ def main():
     print("==================================================")
     print(">> Salivo Compiler: Stage 3 Self-Hosted Compiler")
     print(f">> Driver: {sf_bin}")
-    print(f">> Mode:   --compiler stage3 (SALIVO_COMPILER=stage3)")
+    print(f">> Mode:   --compiler stage3 (Strict: Zero-Fallback)")
     print(f">> Target: {corpus_dir}")
     print("==================================================\n")
 
@@ -85,20 +82,29 @@ def main():
             timeout=20,
             env=os.environ
         )
+        combined_output = (run_res.stdout or "") + (run_res.stderr or "")
+
+        # Strictly check for any fallback notice
+        if "Stage 3 cannot compile" in combined_output or "building it with the Rust compiler" in combined_output:
+            print("[FAIL - STAGE-3 FALLBACK DETECTED]")
+            print(f"      {combined_output.strip()}")
+            failed += 1
+            continue
+
         if run_res.returncode == 0:
             print("[PASS & EXECUTED OK]")
             passed += 1
         else:
             print("[FAIL - STAGE-3 RUN]")
-            print(f"      {run_res.stderr.strip() or run_res.stdout.strip()}")
+            print(f"      {combined_output.strip()}")
             failed += 1
 
     elapsed = time.time() - start_time
     print(f"\n==================================================")
-    print(f"Stage-3 Verification Summary ({elapsed:.2f}s):")
-    print(f"  Total Files:       {len(sal_files)}")
-    print(f"  Stage-3 Executed:  {passed}")
-    print(f"  Failed:            {failed}")
+    print(f"Strict Stage-3 Verification Summary ({elapsed:.2f}s):")
+    print(f"  Total Files:             {len(sal_files)}")
+    print(f"  Stage-3 Native Executed: {passed}")
+    print(f"  Failed / Fallback:       {failed}")
     print(f"==================================================")
 
     if failed > 0:

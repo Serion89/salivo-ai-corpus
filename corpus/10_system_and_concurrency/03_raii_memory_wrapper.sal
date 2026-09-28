@@ -1,0 +1,48 @@
+module corpus.system.safeheap;
+
+><salivo.std.core::{outln, Drop};
+><salivo.std.mem::{allocate, deallocate, writei64, readi64};
+
+pub struct SafeIntBlock {
+    int address;
+    int size;
+    int alignment;
+}
+
+pub func safeAllocBlock(count_i64: int) -> SafeIntBlock {
+    let size_bytes = count_i64 * 8;
+    let align_bytes = 8;
+    let addr = allocate(size_bytes, align_bytes);
+    outln($"[SafeIntBlock] Allocated {size_bytes:str} bytes at address {addr:str}");
+
+    return SafeIntBlock {
+        address: addr,
+        size: size_bytes,
+        alignment: align_bytes,
+    };
+}
+
+impl Drop for SafeIntBlock {
+    func drop(self) {
+        deallocate(self.address, self.size, self.alignment);
+        outln($"[SafeIntBlock] RAII Drop: Automatically freed {self.size:str} bytes at address {self.address:str}");
+    }
+}
+
+pub func scopedExecution() {
+    let block = safeAllocBlock(2);
+    writei64(block.address, 0, 777);
+    writei64(block.address, 8, 888);
+
+    let val0 = readi64(block.address, 0);
+    let val1 = readi64(block.address, 8);
+    outln($"[Inside Scope] Read values: {val0:str}, {val1:str}");
+}
+
+pub func main() -> int {
+    outln("Starting scoped execution...");
+    scopedExecution();
+    outln("Scoped execution returned to main.");
+
+    return 0;
+}

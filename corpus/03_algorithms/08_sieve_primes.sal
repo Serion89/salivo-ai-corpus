@@ -1,0 +1,44 @@
+module corpus.algorithms.sieveprimes;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func countPrimesUpTo(limit: int) -> int {
+    if (limit < 2) {
+        return 0;
+    }
+
+    // 0 = prime, 1 = composite
+    let mut is_composite = vecNew<int>();
+    for (let mut i = 0; i <= limit; i = i + 1) {
+        is_composite = push<int>(is_composite, 0);
+    }
+
+    set<int>(is_composite, 0, 1);
+    set<int>(is_composite, 1, 1);
+
+    for (let mut p = 2; p * p <= limit; p = p + 1) {
+        if (get<int>(is_composite, p) == 0) {
+            for (let mut multiple = p * p; multiple <= limit; multiple = multiple + p) {
+                set<int>(is_composite, multiple, 1);
+            }
+        }
+    }
+
+    let mut prime_count: int = 0;
+    for (let mut k = 2; k <= limit; k = k + 1) {
+        if (get<int>(is_composite, k) == 0) {
+            prime_count = prime_count + 1;
+        }
+    }
+
+    return prime_count;
+}
+
+pub func main() -> int {
+    let limit: int = 50;
+    let primes_found = countPrimesUpTo(limit);
+
+    outln($"Number of prime numbers up to {limit:str}: {primes_found:str}");
+    return 0;
+}

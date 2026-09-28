@@ -1,0 +1,43 @@
+module corpus.algorithms.selectionsort;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func selectionSort(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let mut min_idx: int = i;
+        for (let mut j = i + 1; j < n; j = j + 1) {
+            let current = get<int>(list, j);
+            let smallest = get<int>(list, min_idx);
+            if (current < smallest) {
+                min_idx = j;
+            }
+        }
+        if (min_idx != i) {
+            let temp_i = get<int>(list, i);
+            let temp_min = get<int>(list, min_idx);
+            set<int>(list, i, temp_min);
+            set<int>(list, min_idx, temp_i);
+        }
+    }
+}
+
+pub func main() -> int {
+    let mut numbers = vecNew<int>();
+    numbers = push<int>(numbers, 29);
+    numbers = push<int>(numbers, 10);
+    numbers = push<int>(numbers, 14);
+    numbers = push<int>(numbers, 37);
+    numbers = push<int>(numbers, 13);
+
+    selectionSort(numbers);
+
+    let count = veclen<int>(numbers);
+    for (let mut k = 0; k < count; k = k + 1) {
+        let val = get<int>(numbers, k);
+        outln($"Selection Sorted [{k:str}]: {val:str}");
+    }
+
+    return 0;
+}

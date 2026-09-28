@@ -1,0 +1,26 @@
+module corpus.system.benchmark;
+
+><salivo.std.core::{outln};
+><salivo.std.time::{Instant, Duration, now, elapsed};
+
+pub func computeWorkload(iterations: int) -> int {
+    let mut total: int = 0;
+    for (let mut i = 0; i < iterations; i = i + 1) {
+        total = total + (i % 7);
+    }
+    return total;
+}
+
+pub func main() -> int {
+    let start_time = now();
+
+    let iterations: int = 10000;
+    let result = computeWorkload(iterations);
+
+    let duration_taken = elapsed(start_time);
+
+    outln($"Completed {iterations:str} operations. Total accumulator: {result:str}");
+    outln($"Elapsed time: {duration_taken.seconds:str}s {duration_taken.nanoseconds:str}ns");
+
+    return 0;
+}

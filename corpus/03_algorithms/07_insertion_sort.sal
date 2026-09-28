@@ -1,0 +1,39 @@
+module corpus.algorithms.insertionsort;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func insertionSort(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut i = 1; i < n; i = i + 1) {
+        let key = get<int>(list, i);
+        let mut j: int = i - 1;
+
+        while (j >= 0 && get<int>(list, j) > key) {
+            let prev_val = get<int>(list, j);
+            set<int>(list, j + 1, prev_val);
+            j = j - 1;
+        }
+        set<int>(list, j + 1, key);
+    }
+}
+
+pub func main() -> int {
+    let mut items = vecNew<int>();
+    items = push<int>(items, 5);
+    items = push<int>(items, 2);
+    items = push<int>(items, 4);
+    items = push<int>(items, 6);
+    items = push<int>(items, 1);
+    items = push<int>(items, 3);
+
+    insertionSort(items);
+
+    let count = veclen<int>(items);
+    for (let mut k = 0; k < count; k = k + 1) {
+        let val = get<int>(items, k);
+        outln($"Insertion Sorted [{k:str}]: {val:str}");
+    }
+
+    return 0;
+}

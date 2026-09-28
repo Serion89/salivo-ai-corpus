@@ -1,0 +1,42 @@
+module corpus.frontend.tablerenderer;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct TableRow {
+    string col1;
+    string col2;
+    string col3;
+}
+
+pub func renderTableRow(row: TableRow) -> string {
+    return $"  <tr><td>{row.col1}</td><td>{row.col2}</td><td>{row.col3}</td></tr>";
+}
+
+pub func renderTable(rows: Vec<TableRow>) -> string {
+    let header = "  <thead><tr><th>ID</th><th>Service</th><th>Status</th></tr></thead>";
+    let count = veclen<TableRow>(rows);
+
+    let mut body = "  <tbody>\n";
+    for (let mut i = 0; i < count; i = i + 1) {
+        let r = get<TableRow>(rows, i);
+        let row_html = renderTableRow(r);
+        body = $"{body}{row_html}\n";
+    }
+    body = $"{body}  </tbody>";
+
+    return $"<table class=\"data-table\">\n{header}\n{body}\n</table>";
+}
+
+pub func main() -> int {
+    let mut table_data = vecNew<TableRow>();
+    table_data = push<TableRow>(table_data, TableRow { col1: "101", col2: "Auth-Service", col3: "UP" });
+    table_data = push<TableRow>(table_data, TableRow { col1: "102", col2: "Payment-Gateway", col3: "UP" });
+    table_data = push<TableRow>(table_data, TableRow { col1: "103", col2: "Analytics-Engine", col3: "MAINTENANCE" });
+
+    let rendered = renderTable(table_data);
+    outln("Rendered HTML Table:");
+    outln(rendered);
+
+    return 0;
+}

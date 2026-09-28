@@ -1,0 +1,34 @@
+module corpus.system.memorybuffer;
+
+><salivo.std.core::{outln};
+><salivo.std.mem::{allocate, deallocate, writei64, readi64};
+
+pub func main() -> int {
+    let buffer_size: int = 32; // 4 x 64-bit integers
+    let alignment: int = 8;
+
+    let buffer_addr = allocate(buffer_size, alignment);
+    outln("Memory buffer successfully allocated.");
+
+    // Write four 64-bit integer values at byte offsets 0, 8, 16, 24
+    writei64(buffer_addr, 0, 1001);
+    writei64(buffer_addr, 8, 2002);
+    writei64(buffer_addr, 16, 3003);
+    writei64(buffer_addr, 24, 4004);
+
+    let v0 = readi64(buffer_addr, 0);
+    let v1 = readi64(buffer_addr, 8);
+    let v2 = readi64(buffer_addr, 16);
+    let v3 = readi64(buffer_addr, 24);
+
+    outln($"Offset 0:  {v0:str}");
+    outln($"Offset 8:  {v1:str}");
+    outln($"Offset 16: {v2:str}");
+    outln($"Offset 24: {v3:str}");
+
+    // Clean deallocation
+    deallocate(buffer_addr, buffer_size, alignment);
+    outln("Memory buffer deallocated successfully.");
+
+    return 0;
+}

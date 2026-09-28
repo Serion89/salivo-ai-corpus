@@ -1,0 +1,62 @@
+module corpus.collections.lifostack;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, remove, get, veclen};
+
+pub struct IntStack {
+    Vec<int> elements;
+}
+
+pub func stackCreate() -> IntStack {
+    return IntStack {
+        elements: vecNew<int>(),
+    };
+}
+
+pub func stackPush(s: IntStack, value: int) -> IntStack {
+    let mut updated_elements: Vec<int> = s.elements;
+    updated_elements = push<int>(updated_elements, value);
+    return IntStack {
+        elements: updated_elements,
+    };
+}
+
+pub func stackPop(s: IntStack) -> Option<int> {
+    let count = veclen<int>(s.elements);
+    if (count == 0) {
+        return none();
+    }
+    let last_index = count - 1;
+    let top_element = get<int>(s.elements, last_index);
+    remove<int>(s.elements, last_index);
+    return some(top_element);
+}
+
+pub func stackPeek(s: IntStack) -> Option<int> {
+    let count = veclen<int>(s.elements);
+    if (count == 0) {
+        return none();
+    }
+    let last_index = count - 1;
+    return some(get<int>(s.elements, last_index));
+}
+
+pub func stackSize(s: IntStack) -> int {
+    return veclen<int>(s.elements);
+}
+
+pub func main() -> int {
+    let mut st = stackCreate();
+    st = stackPush(st, 100);
+    st = stackPush(st, 200);
+    st = stackPush(st, 300);
+
+    let initial_size = stackSize(st);
+    outln($"Stack size before pop: {initial_size:str}");
+
+    let popped_item = stackPop(st);
+    let final_size = stackSize(st);
+
+    outln($"Stack size after pop: {final_size:str}");
+    return 0;
+}

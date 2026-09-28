@@ -1,0 +1,27 @@
+module corpus.security.tokens;
+
+><salivo.std.core::{outln, Result};
+><salivo.std.crypto::{EntropyProvider, CryptoError, entropy, secSeed, sha256Hex};
+
+pub func generateSessionToken(session_id: int) -> string {
+    let prov = entropy(true, 1);
+    let seed_res: Result<int, CryptoError> = secSeed(prov);
+
+    let mut random_val: int = 42;
+    if (seed_res.is_ok) {
+        random_val = seed_res.value;
+    }
+
+    let raw_token = $"token_v1_{session_id:str}_{random_val:str}";
+    return sha256Hex(raw_token);
+}
+
+pub func main() -> int {
+    let token1 = generateSessionToken(1001);
+    let token2 = generateSessionToken(1002);
+
+    outln($"Session Token 1: {token1}");
+    outln($"Session Token 2: {token2}");
+
+    return 0;
+}

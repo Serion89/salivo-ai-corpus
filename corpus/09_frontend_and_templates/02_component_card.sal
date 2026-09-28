@@ -1,0 +1,43 @@
+module corpus.frontend.cardcomponent;
+
+><salivo.std.core::{outln};
+
+pub struct CardProps {
+    string title;
+    string category;
+    string summary;
+    bool is_featured;
+    int read_time_minutes;
+}
+
+pub func renderBadge(category: string, is_featured: bool) -> string {
+    if (is_featured) {
+        return $"<span class=\"badge badge-featured\">{category:upper} *</span>";
+    }
+    return $"<span class=\"badge\">{category}</span>";
+}
+
+pub func renderCard(props: CardProps) -> string {
+    let badge_html = renderBadge(props.category, props.is_featured);
+    let title_html = $"<h3 class=\"card-title\">{props.title}</h3>";
+    let desc_html = $"<p class=\"card-summary\">{props.summary}</p>";
+    let meta_html = $"<div class=\"card-meta\">{props.read_time_minutes:str} min read</div>";
+    let btn_html = "<button class=\"btn btn-primary\">Read More</button>";
+
+    return $"<div class=\"ui-card\">\n  {badge_html}\n  {title_html}\n  {desc_html}\n  {meta_html}\n  {btn_html}\n</div>";
+}
+
+pub func main() -> int {
+    let sample_card = CardProps {
+        title: "Deterministic Memory Management in Systems AI",
+        category: "Architecture",
+        summary: "How zero-cost RAII destructors prevent memory leaks in autonomous agents.",
+        is_featured: true,
+        read_time_minutes: 5,
+    };
+
+    let rendered = renderCard(sample_card);
+    outln("Component Card Render Output:");
+    outln(rendered);
+    return 0;
+}

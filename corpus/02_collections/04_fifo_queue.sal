@@ -1,0 +1,54 @@
+module corpus.collections.fifoqueue;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, remove, get, veclen};
+
+pub struct IntQueue {
+    Vec<int> items;
+}
+
+pub func queueCreate() -> IntQueue {
+    return IntQueue {
+        items: vecNew<int>(),
+    };
+}
+
+pub func queueEnqueue(q: IntQueue, val: int) -> IntQueue {
+    let mut updated_items: Vec<int> = q.items;
+    updated_items = push<int>(updated_items, val);
+    return IntQueue {
+        items: updated_items,
+    };
+}
+
+pub func queueDequeue(q: IntQueue) -> Option<int> {
+    let size = veclen<int>(q.items);
+    if (size == 0) {
+        return none();
+    }
+    let front_item = get<int>(q.items, 0);
+    remove<int>(q.items, 0);
+    return some(front_item);
+}
+
+pub func queueLength(q: IntQueue) -> int {
+    return veclen<int>(q.items);
+}
+
+pub func main() -> int {
+    let mut q = queueCreate();
+    q = queueEnqueue(q, 10);
+    q = queueEnqueue(q, 20);
+    q = queueEnqueue(q, 30);
+
+    let count_before = queueLength(q);
+    outln($"Queue size before dequeue: {count_before:str}");
+
+    let item1 = queueDequeue(q);
+    let item2 = queueDequeue(q);
+
+    let count_after = queueLength(q);
+    outln($"Queue size after dequeuing: {count_after:str}");
+
+    return 0;
+}

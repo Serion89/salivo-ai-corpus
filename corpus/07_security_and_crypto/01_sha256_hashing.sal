@@ -1,0 +1,14 @@
+module corpus.security.sha256;
+
+><salivo.std.core::{outln};
+><salivo.std.crypto::{sha256Hex};
+
+pub func main() -> int {
+    let payload = "salivo-secure-payload-v1";
+    let hash_digest = sha256Hex(payload);
+
+    outln($"Input: {payload}");
+    outln($"SHA-256 Digest: {hash_digest}");
+
+    return 0;
+}

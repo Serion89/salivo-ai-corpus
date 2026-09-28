@@ -1,0 +1,60 @@
+module corpus.frontend.cssclasses;
+
+><salivo.std.core::{outln};
+
+pub struct ButtonState {
+    bool is_primary;
+    bool is_large;
+    bool is_disabled;
+    bool is_active;
+}
+
+pub func classNames(base: string, state: ButtonState) -> string {
+    let mut classes = base;
+
+    if (state.is_primary) {
+        classes = $"{classes} btn-primary";
+    } else {
+        classes = $"{classes} btn-secondary";
+    }
+
+    if (state.is_large) {
+        classes = $"{classes} btn-lg";
+    } else {
+        classes = $"{classes} btn-sm";
+    }
+
+    if (state.is_disabled) {
+        classes = $"{classes} disabled";
+    }
+
+    if (state.is_active) {
+        classes = $"{classes} active";
+    }
+
+    return classes;
+}
+
+pub func main() -> int {
+    let state1 = ButtonState {
+        is_primary: true,
+        is_large: true,
+        is_disabled: false,
+        is_active: true,
+    };
+
+    let state2 = ButtonState {
+        is_primary: false,
+        is_large: false,
+        is_disabled: true,
+        is_active: false,
+    };
+
+    let btn1_classes = classNames("btn", state1);
+    let btn2_classes = classNames("btn", state2);
+
+    outln($"Button 1 classList: \"{btn1_classes}\"");
+    outln($"Button 2 classList: \"{btn2_classes}\"");
+
+    return 0;
+}

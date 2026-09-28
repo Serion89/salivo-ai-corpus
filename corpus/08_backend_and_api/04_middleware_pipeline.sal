@@ -1,0 +1,96 @@
+module corpus.backend.middleware;
+
+><salivo.std.core::{outln};
+
+pub struct PipelineRequest {
+    string auth_token;
+    string path;
+    int request_id;
+}
+
+pub struct PipelineContext {
+    bool is_authorized;
+    bool rate_limit_ok;
+    int status_code;
+    string message;
+}
+
+pub func authMiddleware(req: PipelineRequest, ctx: PipelineContext) -> PipelineContext {
+    if (req.auth_token == "Bearer secret-token-xyz") {
+        return PipelineContext {
+            is_authorized: true,
+            rate_limit_ok: ctx.rate_limit_ok,
+            status_code: 200,
+            message: "Authorized",
+        };
+    }
+    return PipelineContext {
+        is_authorized: false,
+        rate_limit_ok: ctx.rate_limit_ok,
+        status_code: 401,
+        message: "Unauthorized token",
+    };
+}
+
+pub func rateLimitMiddleware(req: PipelineRequest, ctx: PipelineContext) -> PipelineContext {
+    if (!ctx.is_authorized) {
+        return ctx;
+    }
+    if (req.request_id > 1000) {
+        return PipelineContext {
+            is_authorized: ctx.is_authorized,
+            rate_limit_ok: false,
+            status_code: 429,
+            message: "Too Many Requests",
+        };
+    }
+    return PipelineContext {
+        is_authorized: ctx.is_authorized,
+        rate_limit_ok: true,
+        status_code: 200,
+        message: "OK",
+    };
+}
+
+pub func executePipeline(req: PipelineRequest) -> PipelineContext {
+    let initial_ctx = PipelineContext {
+        is_authorized: false,
+        rate_limit_ok: true,
+        status_code: 200,
+        message: "Init",
+    };
+
+    let auth_ctx = authMiddleware(req, initial_ctx);
+    let final_ctx = rateLimitMiddleware(req, auth_ctx);
+    return final_ctx;
+}
+
+pub func main() -> int {
+    let valid_req = PipelineRequest {
+        auth_token: "Bearer secret-token-xyz",
+        path: "/v1/dashboard",
+        request_id: 42,
+    };
+
+    let invalid_req = PipelineRequest {
+        auth_token: "Bearer wrong-token",
+        path: "/v1/dashboard",
+        request_id: 10,
+    };
+
+    let rate_limited_req = PipelineRequest {
+        auth_token: "Bearer secret-token-xyz",
+        path: "/v1/dashboard",
+        request_id: 5000,
+    };
+
+    let res1 = executePipeline(valid_req);
+    let res2 = executePipeline(invalid_req);
+    let res3 = executePipeline(rate_limited_req);
+
+    outln($"Valid Request Status: {res1.status_code:str} ({res1.message})");
+    outln($"Invalid Request Status: {res2.status_code:str} ({res2.message})");
+    outln($"Rate Limited Status: {res3.status_code:str} ({res3.message})");
+
+    return 0;
+}

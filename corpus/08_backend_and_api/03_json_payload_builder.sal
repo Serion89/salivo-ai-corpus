@@ -1,0 +1,36 @@
+module corpus.backend.jsonbuilder;
+
+><salivo.std.core::{outln};
+
+pub func jsonPropString(key: string, value: string) -> string {
+    return $"\"{key}\": \"{value}\"";
+}
+
+pub func jsonPropInt(key: string, value: int) -> string {
+    return $"\"{key}\": {value:str}";
+}
+
+pub func jsonPropBool(key: string, value: bool) -> string {
+    if (value) {
+        return $"\"{key}\": true";
+    }
+    return $"\"{key}\": false";
+}
+
+pub func buildUserJson(user_id: int, username: string, is_admin: bool) -> string {
+    let prop1 = jsonPropInt("id", user_id);
+    let prop2 = jsonPropString("name", username);
+    let prop3 = jsonPropBool("active", is_admin);
+
+    let lbrace = "{";
+    let rbrace = "}";
+
+    return $"{lbrace}\n  {prop1},\n  {prop2},\n  {prop3}\n{rbrace}";
+}
+
+pub func main() -> int {
+    let payload = buildUserJson(402, "alex_dev", true);
+    outln("Constructed JSON Payload:");
+    outln(payload);
+    return 0;
+}

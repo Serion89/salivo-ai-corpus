@@ -1,0 +1,20 @@
+module corpus.algorithms.mathbuiltins;
+
+><salivo.std.core::{outln};
+><salivo.std.math::{abs, min, max, clamp, pow};
+
+pub func main() -> int {
+    let negative_val: int = -42;
+    let absolute_val = abs(negative_val);
+    let minimum_val = min(15, 29);
+    let maximum_val = max(15, 29);
+    let clamped_val = clamp(150, 0, 100);
+    let power_result = pow(2, 8);
+
+    outln($"Absolute(-42) = {absolute_val:str}");
+    outln($"Min(15, 29) = {minimum_val:str}, Max(15, 29) = {maximum_val:str}");
+    outln($"Clamp(150, 0, 100) = {clamped_val:str}");
+    outln($"Pow(2, 8) = {power_result:str}");
+
+    return 0;
+}
