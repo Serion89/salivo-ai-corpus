@@ -1,0 +1,38 @@
+module corpus.smart.minidb.storage;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct RowData {
+    int id;
+    string val;
+}
+
+pub struct TableStorage {
+    string name;
+    int row_count;
+}
+
+pub func findById(rows: Vec<RowData>, target_id: int) -> Option<RowData> {
+    let n = veclen<RowData>(rows);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let r = get<RowData>(rows, i);
+        if (r.id == target_id) {
+            return some(r);
+        }
+    }
+    return none();
+}
+
+pub func main() -> int {
+    let mut rows: Vec<RowData> = vecNew<RowData>();
+    rows = push<RowData>(rows, RowData { id: 101, val: "Alice" });
+    rows = push<RowData>(rows, RowData { id: 102, val: "Bob" });
+    rows = push<RowData>(rows, RowData { id: 103, val: "Charlie" });
+
+    let found = findById(rows, 102);
+    if (found.is_some) {
+        outln("Found Record in MiniDB: ID=102, Val=Bob");
+    }
+    return 0;
+}

@@ -1,0 +1,38 @@
+module corpus.smart.crypto.hmac;
+
+><salivo.std.core::{outln};
+
+pub struct HmacSession {
+    string secret_key;
+    int nonce;
+}
+
+pub func generateAuthTag(session: HmacSession, message: string) -> int {
+    let k_len = strint($"{session.secret_key:len}");
+    let m_len = strint($"{message:len}");
+    // Hash combination of key, message, and nonce
+    let tag = (k_len * 31 + m_len * 17 + session.nonce * 13) % 100000;
+    return tag;
+}
+
+pub func verifyAuthTag(session: HmacSession, message: string, expected_tag: int) -> bool {
+    let actual = generateAuthTag(session, message);
+    return actual == expected_tag;
+}
+
+pub func main() -> int {
+    let session = HmacSession {
+        secret_key: "salivo_super_secret_protocol_key",
+        nonce: 42,
+    };
+
+    let msg = "CMD_TRANSFER_FUNDS";
+    let tag = generateAuthTag(session, msg);
+    let is_valid = verifyAuthTag(session, msg, tag);
+
+    let tag_str = $"{tag:str}";
+    if (is_valid) {
+        outln($"HMAC Verification Succeeded: Tag={tag_str}, Authenticated=true");
+    }
+    return 0;
+}

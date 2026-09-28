@@ -1,0 +1,39 @@
+module corpus.smart.markdown.emitter;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct HtmlElement {
+    string tag;
+    string inner_text;
+}
+
+pub func renderElement(elem: HtmlElement) -> string {
+    let t = elem.tag;
+    let txt = elem.inner_text;
+    if (t == "hr") {
+        return "<hr />";
+    }
+    return $"<{t}>{txt}</{t}>";
+}
+
+pub func renderArticle(title: string, body: string, code: string) -> string {
+    let h1 = renderElement(HtmlElement { tag: "h1", inner_text: title });
+    let p = renderElement(HtmlElement { tag: "p", inner_text: body });
+    let pre = renderElement(HtmlElement { tag: "pre", inner_text: code });
+    let hr = renderElement(HtmlElement { tag: "hr", inner_text: "" });
+
+    return $"<article>\n  {h1}\n  {hr}\n  {p}\n  {pre}\n</article>";
+}
+
+pub func main() -> int {
+    let html = renderArticle(
+        "Salivo Project Guidelines",
+        "Deterministic memory management and zero-cost abstractions.",
+        "><salivo.std.core::{outln};"
+    );
+
+    outln("Generated Semantic HTML:");
+    outln(html);
+    return 0;
+}

@@ -1,0 +1,40 @@
+module corpus.smart.chess.game;
+
+><salivo.std.core::{outln};
+
+pub enum GameState {
+    Active,
+    WhiteWins,
+    BlackWins,
+    Stalemate,
+}
+
+pub struct MatchState {
+    int turn_number;
+    bool is_white_to_move;
+    GameState state;
+}
+
+pub func stepTurn(match_state: MatchState) -> MatchState {
+    return MatchState {
+        turn_number: match_state.turn_number + 1,
+        is_white_to_move: !match_state.is_white_to_move,
+        state: match_state.state,
+    };
+}
+
+pub func main() -> int {
+    let mut game = MatchState {
+        turn_number: 1,
+        is_white_to_move: true,
+        state: GameState.Active,
+    };
+
+    // Play 1. e4 e5
+    game = stepTurn(game);
+    game = stepTurn(game);
+
+    let turns_str = $"{game.turn_number:str}";
+    outln($"Chess Engine: Game active at move {turns_str}.");
+    return 0;
+}

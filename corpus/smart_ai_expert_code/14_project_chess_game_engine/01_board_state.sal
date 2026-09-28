@@ -1,0 +1,46 @@
+module corpus.smart.chess.board;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub enum PieceKind {
+    None,
+    Pawn,
+    Knight,
+    Bishop,
+    Rook,
+    Queen,
+    King,
+}
+
+pub enum PieceColor {
+    ColorWhite,
+    ColorBlack,
+    ColorNone,
+}
+
+pub struct ChessPiece {
+    PieceKind kind;
+    PieceColor color;
+}
+
+pub func createEmptyBoard() -> Vec<ChessPiece> {
+    let mut b: Vec<ChessPiece> = vecNew<ChessPiece>();
+    for (let mut i = 0; i < 64; i = i + 1) {
+        b = push<ChessPiece>(b, ChessPiece { kind: PieceKind.None, color: PieceColor.ColorNone });
+    }
+    return b;
+}
+
+pub func main() -> int {
+    let mut board = createEmptyBoard();
+    // Place White King on e1 (index 4)
+    set<ChessPiece>(board, 4, ChessPiece { kind: PieceKind.King, color: PieceColor.ColorWhite });
+    // Place Black King on e8 (index 60)
+    set<ChessPiece>(board, 60, ChessPiece { kind: PieceKind.King, color: PieceColor.ColorBlack });
+
+    let count = veclen<ChessPiece>(board);
+    let count_str = $"{count:str}";
+    outln($"Initialized Chess Board with {count_str} squares.");
+    return 0;
+}

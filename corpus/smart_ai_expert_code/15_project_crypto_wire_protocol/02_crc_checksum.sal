@@ -1,0 +1,36 @@
+module corpus.smart.crypto.crc;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func computeChecksum(packet_bytes: Vec<int>) -> int {
+    let mut crc: int = 65535;
+    let n = veclen<int>(packet_bytes);
+
+    for (let mut i = 0; i < n; i = i + 1) {
+        let b = get<int>(packet_bytes, i);
+        crc = (crc ^ b) & 65535;
+        for (let mut j = 0; j < 8; j = j + 1) {
+            if ((crc & 1) != 0) {
+                crc = (crc / 2) ^ 40961;
+            } else {
+                crc = crc / 2;
+            }
+        }
+    }
+    return crc;
+}
+
+pub func main() -> int {
+    let mut packet: Vec<int> = vecNew<int>();
+    packet = push<int>(packet, 83);  // 'S'
+    packet = push<int>(packet, 1);   // Opcode
+    packet = push<int>(packet, 12);  // Length
+    packet = push<int>(packet, 255); // Payload byte
+
+    let cs = computeChecksum(packet);
+    let cs_str = $"{cs:str}";
+
+    outln($"Wire Protocol Checksum: CRC-16={cs_str}");
+    return 0;
+}

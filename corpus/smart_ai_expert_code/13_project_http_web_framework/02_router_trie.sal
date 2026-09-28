@@ -1,0 +1,42 @@
+module corpus.smart.http.router;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct RouteEntry {
+    string pattern;
+    string handler_name;
+    int status_code;
+}
+
+pub struct Router {
+    int route_count;
+}
+
+pub func matchRoute(routes: Vec<RouteEntry>, path: string) -> int {
+    let n = veclen<RouteEntry>(routes);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let r = get<RouteEntry>(routes, i);
+        if (r.pattern == path) {
+            return r.status_code;
+        }
+    }
+    return 404; // Not Found
+}
+
+pub func main() -> int {
+    let mut table: Vec<RouteEntry> = vecNew<RouteEntry>();
+    table = push<RouteEntry>(table, RouteEntry { pattern: "/", handler_name: "indexHandler", status_code: 200 });
+    table = push<RouteEntry>(table, RouteEntry { pattern: "/api/users", handler_name: "listUsers", status_code: 200 });
+    table = push<RouteEntry>(table, RouteEntry { pattern: "/api/auth", handler_name: "authenticate", status_code: 200 });
+
+    let status1 = matchRoute(table, "/api/users");
+    let status2 = matchRoute(table, "/nonexistent");
+
+    let s1_str = $"{status1:str}";
+    let s2_str = $"{status2:str}";
+
+    outln($"Router Matched '/api/users': Status {s1_str}");
+    outln($"Router Matched '/nonexistent': Status {s2_str}");
+    return 0;
+}

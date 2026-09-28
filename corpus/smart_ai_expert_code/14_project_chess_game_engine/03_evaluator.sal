@@ -1,0 +1,37 @@
+module corpus.smart.chess.evaluator;
+
+><salivo.std.core::{outln};
+
+pub struct MaterialCount {
+    int pawns;
+    int knights;
+    int bishops;
+    int rooks;
+    int queens;
+}
+
+pub func calculateScore(mat: MaterialCount) -> int {
+    let pawn_val = mat.pawns * 100;
+    let knight_val = mat.knights * 320;
+    let bishop_val = mat.bishops * 330;
+    let rook_val = mat.rooks * 500;
+    let queen_val = mat.queens * 900;
+
+    return pawn_val + knight_val + bishop_val + rook_val + queen_val;
+}
+
+pub func main() -> int {
+    let white_mat = MaterialCount {
+        pawns: 8,
+        knights: 2,
+        bishops: 2,
+        rooks: 2,
+        queens: 1,
+    };
+
+    let score = calculateScore(white_mat);
+    let score_str = $"{score:str}";
+
+    outln($"Starting White Material Evaluation: {score_str} centipawns.");
+    return 0;
+}

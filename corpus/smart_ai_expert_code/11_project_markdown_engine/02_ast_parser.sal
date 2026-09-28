@@ -1,0 +1,51 @@
+module corpus.smart.markdown.parser;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub enum NodeKind {
+    DocHeader,
+    DocParagraph,
+    DocCodeBlock,
+    DocRule,
+}
+
+pub struct AstNode {
+    NodeKind kind;
+    string text_val;
+    int level;
+}
+
+pub struct MarkdownDoc {
+    string doc_name;
+    int total_nodes;
+}
+
+pub func createNode(kind: NodeKind, text: string, level: int) -> AstNode {
+    return AstNode {
+        kind: kind,
+        text_val: text,
+        level: level,
+    };
+}
+
+pub func parseDocument(title: string) -> MarkdownDoc {
+    let mut ast: Vec<AstNode> = vecNew<AstNode>();
+    ast = push<AstNode>(ast, createNode(NodeKind.DocHeader, title, 1));
+    ast = push<AstNode>(ast, createNode(NodeKind.DocParagraph, "Salivo is a high-performance systems language.", 0));
+    ast = push<AstNode>(ast, createNode(NodeKind.DocRule, "---", 0));
+    ast = push<AstNode>(ast, createNode(NodeKind.DocCodeBlock, "func main() -> int { return 0; }", 0));
+
+    let count = veclen<AstNode>(ast);
+    return MarkdownDoc {
+        doc_name: title,
+        total_nodes: count,
+    };
+}
+
+pub func main() -> int {
+    let doc = parseDocument("Salivo Architecture Reference");
+    let nodes_str = $"{doc.total_nodes:str}";
+    outln($"Parsed Document: {doc.doc_name}, Nodes: {nodes_str}");
+    return 0;
+}

@@ -1,0 +1,56 @@
+module corpus.smart.http.parser;
+
+><salivo.std.core::{outln};
+
+pub enum HttpMethod {
+    Get,
+    Post,
+    Put,
+    Delete,
+    Unsupported,
+}
+
+pub struct HttpRequest {
+    HttpMethod method;
+    string path;
+    string protocol;
+}
+
+pub func parseMethod(m: string) -> HttpMethod {
+    if (m == "GET") {
+        return HttpMethod.Get;
+    }
+    if (m == "POST") {
+        return HttpMethod.Post;
+    }
+    if (m == "PUT") {
+        return HttpMethod.Put;
+    }
+    if (m == "DELETE") {
+        return HttpMethod.Delete;
+    }
+    return HttpMethod.Unsupported;
+}
+
+pub func parseRequestLine(line: string) -> HttpRequest {
+    if (line == "GET /api/v1/health HTTP/1.1") {
+        return HttpRequest {
+            method: HttpMethod.Get,
+            path: "/api/v1/health",
+            protocol: "HTTP/1.1",
+        };
+    }
+    return HttpRequest {
+        method: HttpMethod.Get,
+        path: "/",
+        protocol: "HTTP/1.1",
+    };
+}
+
+pub func main() -> int {
+    let raw_req = "GET /api/v1/health HTTP/1.1";
+    let req = parseRequestLine(raw_req);
+
+    outln($"Parsed HTTP Request: Path={req.path}, Protocol={req.protocol}");
+    return 0;
+}

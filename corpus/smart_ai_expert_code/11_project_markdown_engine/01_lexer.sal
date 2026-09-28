@@ -1,0 +1,65 @@
+module corpus.smart.markdown.lexer;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub enum TokenType {
+    Heading1,
+    Heading2,
+    Heading3,
+    Paragraph,
+    CodeBlock,
+    BulletItem,
+    HorizontalRule,
+    EmptyLine,
+}
+
+pub struct Token {
+    TokenType token_type;
+    string content;
+    int line_num;
+}
+
+pub func classifyLine(line: string, line_num: int) -> Token {
+    let len_str = $"{line:len}";
+    let len = strint(len_str);
+    if (len == 0) {
+        return Token {
+            token_type: TokenType.EmptyLine,
+            content: "",
+            line_num: line_num,
+        };
+    }
+    if (line == "---") {
+        return Token {
+            token_type: TokenType.HorizontalRule,
+            content: "---",
+            line_num: line_num,
+        };
+    }
+    if (line == "```") {
+        return Token {
+            token_type: TokenType.CodeBlock,
+            content: "",
+            line_num: line_num,
+        };
+    }
+    return Token {
+        token_type: TokenType.Paragraph,
+        content: line,
+        line_num: line_num,
+    };
+}
+
+pub func main() -> int {
+    let mut tokens: Vec<Token> = vecNew<Token>();
+    tokens = push<Token>(tokens, classifyLine("# Title", 1));
+    tokens = push<Token>(tokens, classifyLine("```", 2));
+    tokens = push<Token>(tokens, classifyLine("let x = 10;", 3));
+    tokens = push<Token>(tokens, classifyLine("```", 4));
+    tokens = push<Token>(tokens, classifyLine("---", 5));
+
+    let count = veclen<Token>(tokens);
+    outln($"Lexed Markdown tokens: {count:str}");
+    return 0;
+}

@@ -1,0 +1,46 @@
+module corpus.smart.minidb.schema;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub enum ColumnType {
+    TypeInt,
+    TypeString,
+    TypeBool,
+}
+
+pub struct ColumnDef {
+    string col_name;
+    ColumnType col_type;
+    bool is_primary_key;
+}
+
+pub struct TableSchema {
+    string table_name;
+    int column_count;
+}
+
+pub func createColumn(name: string, t: ColumnType, is_pk: bool) -> ColumnDef {
+    return ColumnDef {
+        col_name: name,
+        col_type: t,
+        is_primary_key: is_pk,
+    };
+}
+
+pub func main() -> int {
+    let mut columns: Vec<ColumnDef> = vecNew<ColumnDef>();
+    columns = push<ColumnDef>(columns, createColumn("id", ColumnType.TypeInt, true));
+    columns = push<ColumnDef>(columns, createColumn("username", ColumnType.TypeString, false));
+    columns = push<ColumnDef>(columns, createColumn("is_active", ColumnType.TypeBool, false));
+
+    let count = veclen<ColumnDef>(columns);
+    let schema = TableSchema {
+        table_name: "users",
+        column_count: count,
+    };
+
+    let count_str = $"{schema.column_count:str}";
+    outln($"Created Schema for table '{schema.table_name}' with {count_str} columns.");
+    return 0;
+}

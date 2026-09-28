@@ -1,0 +1,34 @@
+module corpus.smart.http.controller;
+
+><salivo.std.core::{outln};
+
+pub struct HttpResponse {
+    int status;
+    string content_type;
+    string body;
+}
+
+pub func buildJsonResponse(status: int, payload: string) -> HttpResponse {
+    return HttpResponse {
+        status: status,
+        content_type: "application/json",
+        body: payload,
+    };
+}
+
+pub func getUserEndpoint(user_id: int) -> HttpResponse {
+    let id_str = $"{user_id:str}";
+    let lbrace = "{";
+    let rbrace = "}";
+    let json_body = $"{lbrace} \"user_id\": {id_str}, \"status\": \"active\" {rbrace}";
+    return buildJsonResponse(200, json_body);
+}
+
+pub func main() -> int {
+    let resp = getUserEndpoint(42);
+    let st_str = $"{resp.status:str}";
+
+    outln($"REST Controller Response ({st_str} {resp.content_type}):");
+    outln($"Payload: {resp.body}");
+    return 0;
+}

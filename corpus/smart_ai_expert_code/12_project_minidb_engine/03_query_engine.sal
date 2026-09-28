@@ -1,0 +1,47 @@
+module corpus.smart.minidb.query;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct QueryFilter {
+    string col_name;
+    int min_val;
+}
+
+pub struct UserRecord {
+    int id;
+    string name;
+    int age;
+}
+
+pub func filterUsers(users: Vec<UserRecord>, filter: QueryFilter) -> Vec<UserRecord> {
+    let mut results: Vec<UserRecord> = vecNew<UserRecord>();
+    let n = veclen<UserRecord>(users);
+
+    for (let mut i = 0; i < n; i = i + 1) {
+        let u = get<UserRecord>(users, i);
+        if (u.age >= filter.min_val) {
+            results = push<UserRecord>(results, u);
+        }
+    }
+    return results;
+}
+
+pub func main() -> int {
+    let mut users: Vec<UserRecord> = vecNew<UserRecord>();
+    users = push<UserRecord>(users, UserRecord { id: 1, name: "Alice", age: 24 });
+    users = push<UserRecord>(users, UserRecord { id: 2, name: "Bob", age: 17 });
+    users = push<UserRecord>(users, UserRecord { id: 3, name: "Charlie", age: 31 });
+
+    let filter = QueryFilter {
+        col_name: "age",
+        min_val: 18,
+    };
+
+    let matched = filterUsers(users, filter);
+    let matched_count = veclen<UserRecord>(matched);
+    let count_str = $"{matched_count:str}";
+
+    outln($"Query Engine: SELECT * WHERE age >= 18 -> {count_str} rows found.");
+    return 0;
+}

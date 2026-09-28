@@ -1,0 +1,44 @@
+module corpus.smart.markdown.pipeline;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct CompileStats {
+    int total_lines;
+    int rendered_bytes;
+    bool is_valid;
+}
+
+pub func compileMarkdownBuffer(lines: Vec<string>) -> CompileStats {
+    let count = veclen<string>(lines);
+    let mut total_chars: int = 0;
+    for (let mut i = 0; i < count; i = i + 1) {
+        let line = get<string>(lines, i);
+        let len_str = $"{line:len}";
+        total_chars = total_chars + strint(len_str);
+    }
+
+    return CompileStats {
+        total_lines: count,
+        rendered_bytes: total_chars + 120, // Estimated HTML wrapper overhead
+        is_valid: count > 0,
+    };
+}
+
+pub func main() -> int {
+    let mut doc_lines: Vec<string> = vecNew<string>();
+    doc_lines = push<string>(doc_lines, "# Systems Programming in Salivo");
+    doc_lines = push<string>(doc_lines, "Salivo features static typing and deterministic RAII.");
+    doc_lines = push<string>(doc_lines, "```salivo");
+    doc_lines = push<string>(doc_lines, "pub func main() -> int { return 0; }");
+    doc_lines = push<string>(doc_lines, "```");
+
+    let stats = compileMarkdownBuffer(doc_lines);
+    let lines_str = $"{stats.total_lines:str}";
+    let bytes_str = $"{stats.rendered_bytes:str}";
+
+    outln($"Markdown Pipeline Finished:");
+    outln($"  Lines Compiled: {lines_str}");
+    outln($"  Output Bytes:   {bytes_str}");
+    return 0;
+}

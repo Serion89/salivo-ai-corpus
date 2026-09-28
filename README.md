@@ -1,6 +1,6 @@
 # Salivo AI Corpus
 
-> **A curated, 100% compiler-verified dataset of 30,060 idiomatic Salivo code modules for training ultra-fast Small Language Models (SLMs) and IDE coding copilots.**
+> **A curated, 100% compiler-verified dataset of 30,080 idiomatic Salivo code modules for training ultra-fast Small Language Models (SLMs) and IDE coding copilots.**
 
 ---
 
@@ -10,14 +10,14 @@ General AI models frequently hallucinate when generating code in **Salivo** beca
 
 This repository solves that bottleneck by providing:
 1. **Two-Tier Architecture**:
-   - **Smart AI Expert Code** (`corpus/smart_ai_expert_code/`): 60 hand-crafted, high-complexity canonical modules designed for fine-tuning existing smart models (e.g. Claude, GPT-4, Llama, DeepSeek) that already know programming logic and only need deep Salivo systems idioms.
+   - **Smart AI Expert Code** (`corpus/smart_ai_expert_code/`): 80 hand-crafted, high-complexity canonical modules and 5 production-grade flagship projects designed for fine-tuning existing smart models (e.g. Claude, GPT-4, Llama, DeepSeek) that already know programming logic and only need deep Salivo systems idioms.
    - **Pre-Training from Scratch** (`corpus/to_train_llm_from_scratch/`): 30,000 compiler-verified modules designed for training new models from zero on tokenization, grammar rules, and IDE code completion.
 2. **Zero-Hallucination Guarantee**: Every single `.sal` file in this repository is strictly checked and validated by the official Stage-3 Salivo compiler driver (`sf check`).
 3. **Training and Fine-Tuning Pipelines**: Ready-to-use dataset generators for:
-   - **Smart AI Expert SFT** (`datasets/smart_ai_expert_sft.jsonl`): Clean, zero-repetition instruction dataset for high-reasoning coding models.
-   - **Pre-training / Continued Pre-training** (`datasets/pretrain_corpus.jsonl`): 30,060 raw verified code modules.
-   - **Fill-In-The-Middle (FIM)** (`datasets/fim_part1.jsonl`, `datasets/fim_part2.jsonl`): 90,180 autocomplete pairs.
-   - **Instruction-Tuning (SFT)** (`datasets/instruct_sft.jsonl`): 30,060 prompt-response pairs.
+   - **Smart AI Expert SFT** (`datasets/smart_ai_expert_sft.jsonl`): Clean, zero-repetition instruction dataset for high-reasoning coding models (80 verified expert modules).
+   - **Pre-training / Continued Pre-training** (`datasets/pretrain_corpus.jsonl`): 30,080 raw verified code modules.
+   - **Fill-In-The-Middle (FIM)** (`datasets/fim_part1.jsonl`, `datasets/fim_part2.jsonl`): 90,240 autocomplete pairs.
+   - **Instruction-Tuning (SFT)** (`datasets/instruct_sft.jsonl`): 30,080 prompt-response pairs.
 
 ---
 
@@ -36,7 +36,12 @@ salivo-ai-corpus/
 │   │   ├── 07_security_and_crypto/     # SHA-256, HMAC, constant-time validation, salted hashing
 │   │   ├── 08_backend_and_api/         # HTTP statuses, REST routing, JSON building, pipelines
 │   │   ├── 09_frontend_and_templates/  # HTML builders, UI Cards, tables, forms, pagination
-│   │   └── 10_system_and_concurrency/  # Benchmarking, direct memory allocation, safe RAII blocks
+│   │   ├── 10_system_and_concurrency/  # Benchmarking, direct memory allocation, safe RAII blocks
+│   │   ├── 11_project_markdown_engine/ # Full Markdown lexer, AST parser, HTML emitter, pipeline
+│   │   ├── 12_project_minidb_engine/   # In-memory SQL/KV table storage, query filter, WAL transactions
+│   │   ├── 13_project_http_web_framework/ # HTTP parser, route table, middleware stack, REST controller
+│   │   ├── 14_project_chess_game_engine/  # 8x8 Board state, ray move generator, material evaluator, game runner
+│   │   └── 15_project_crypto_wire_protocol/ # Frame codec, CRC16 checksum, HMAC auth, secure session state
 │   │
 │   └── to_train_llm_from_scratch/      # 30,000 files for vocabulary & syntax pre-training
 │       ├── gen_dsa_sorting/            # 3,000 verified sorting algorithm variations

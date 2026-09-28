@@ -1,0 +1,43 @@
+module corpus.smart.crypto.wire;
+
+><salivo.std.core::{outln};
+
+pub struct ProtocolFrame {
+    int magic;
+    int opcode;
+    int payload_len;
+    string payload_data;
+}
+
+pub func encodeFrame(opcode: int, data: string) -> ProtocolFrame {
+    let len_str = $"{data:len}";
+    let d_len = strint(len_str);
+
+    return ProtocolFrame {
+        magic: 83, // 'S' for Salivo
+        opcode: opcode,
+        payload_len: d_len,
+        payload_data: data,
+    };
+}
+
+pub func validateFrame(frame: ProtocolFrame) -> bool {
+    if (frame.magic != 83) {
+        return false;
+    }
+    let actual_len = strint($"{frame.payload_data:len}");
+    return actual_len == frame.payload_len;
+}
+
+pub func main() -> int {
+    let frame = encodeFrame(1, "PING_HEARTBEAT");
+    let is_valid = validateFrame(frame);
+
+    let op_str = $"{frame.opcode:str}";
+    let len_str = $"{frame.payload_len:str}";
+
+    if (is_valid) {
+        outln($"Encoded Wire Frame: Opcode={op_str}, Length={len_str}, Valid=true");
+    }
+    return 0;
+}

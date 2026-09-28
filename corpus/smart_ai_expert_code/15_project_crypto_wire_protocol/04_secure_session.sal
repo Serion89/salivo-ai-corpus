@@ -1,0 +1,57 @@
+module corpus.smart.crypto.session;
+
+><salivo.std.core::{outln};
+
+pub enum SessionState {
+    HandshakeInit,
+    ChallengeSent,
+    Authenticated,
+    Terminated,
+}
+
+pub struct SecureSession {
+    int session_id;
+    SessionState state;
+    int challenge_code;
+}
+
+pub func initSession(id: int) -> SecureSession {
+    return SecureSession {
+        session_id: id,
+        state: SessionState.HandshakeInit,
+        challenge_code: 0,
+    };
+}
+
+pub func sendChallenge(session: SecureSession, code: int) -> SecureSession {
+    return SecureSession {
+        session_id: session.session_id,
+        state: SessionState.ChallengeSent,
+        challenge_code: code,
+    };
+}
+
+pub func completeHandshake(session: SecureSession, response_code: int) -> SecureSession {
+    if (session.challenge_code == response_code) {
+        return SecureSession {
+            session_id: session.session_id,
+            state: SessionState.Authenticated,
+            challenge_code: session.challenge_code,
+        };
+    }
+    return SecureSession {
+        session_id: session.session_id,
+        state: SessionState.Terminated,
+        challenge_code: 0,
+    };
+}
+
+pub func main() -> int {
+    let mut s = initSession(9901);
+    s = sendChallenge(s, 7733);
+    s = completeHandshake(s, 7733);
+
+    let id_str = $"{s.session_id:str}";
+    outln($"Wire Handshake Completed: Session {id_str} is Authenticated.");
+    return 0;
+}

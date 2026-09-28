@@ -1,0 +1,39 @@
+module corpus.smart.chess.moves;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct Move {
+    int from_sq;
+    int to_sq;
+}
+
+pub func isValidSquare(sq: int) -> bool {
+    return sq >= 0 && sq < 64;
+}
+
+pub func generateRookRays(sq: int) -> Vec<Move> {
+    let mut moves: Vec<Move> = vecNew<Move>();
+    let rank = sq / 8;
+    let file = sq % 8;
+
+    // North ray
+    for (let mut r = rank + 1; r < 8; r = r + 1) {
+        moves = push<Move>(moves, Move { from_sq: sq, to_sq: r * 8 + file });
+    }
+    // South ray
+    for (let mut r = rank - 1; r >= 0; r = r - 1) {
+        moves = push<Move>(moves, Move { from_sq: sq, to_sq: r * 8 + file });
+    }
+    return moves;
+}
+
+pub func main() -> int {
+    let rook_sq = 28; // e4
+    let moves = generateRookRays(rook_sq);
+    let count = veclen<Move>(moves);
+    let count_str = $"{count:str}";
+
+    outln($"Generated {count_str} vertical orthogonal moves for Rook on e4.");
+    return 0;
+}

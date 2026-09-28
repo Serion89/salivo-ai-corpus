@@ -1,0 +1,62 @@
+module corpus.smart.minidb.tx;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub enum TxState {
+    Active,
+    Committed,
+    RolledBack,
+}
+
+pub struct WalEntry {
+    int tx_id;
+    string operation;
+    int row_id;
+}
+
+pub struct Transaction {
+    int id;
+    TxState state;
+    int entry_count;
+}
+
+pub func beginTx(id: int) -> Transaction {
+    return Transaction {
+        id: id,
+        state: TxState.Active,
+        entry_count: 0,
+    };
+}
+
+pub func commitTx(tx: Transaction) -> Transaction {
+    return Transaction {
+        id: tx.id,
+        state: TxState.Committed,
+        entry_count: tx.entry_count,
+    };
+}
+
+pub func rollbackTx(tx: Transaction) -> Transaction {
+    return Transaction {
+        id: tx.id,
+        state: TxState.RolledBack,
+        entry_count: 0,
+    };
+}
+
+pub func main() -> int {
+    let mut wal: Vec<WalEntry> = vecNew<WalEntry>();
+    let mut tx1 = beginTx(1001);
+
+    wal = push<WalEntry>(wal, WalEntry { tx_id: 1001, operation: "INSERT", row_id: 50 });
+    wal = push<WalEntry>(wal, WalEntry { tx_id: 1001, operation: "UPDATE", row_id: 50 });
+    tx1 = commitTx(tx1);
+
+    let total_wal = veclen<WalEntry>(wal);
+    let wal_str = $"{total_wal:str}";
+    let tx_str = $"{tx1.id:str}";
+
+    outln($"Transaction {tx_str} successfully committed with {wal_str} WAL log records.");
+    return 0;
+}

@@ -1,0 +1,44 @@
+module corpus.smart.http.middleware;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct MiddlewareContext {
+    string auth_token;
+    int client_rate;
+    bool is_authorized;
+}
+
+pub func runAuthMiddleware(ctx: MiddlewareContext) -> MiddlewareContext {
+    let token_valid = ctx.auth_token == "bearer_secret_123";
+    return MiddlewareContext {
+        auth_token: ctx.auth_token,
+        client_rate: ctx.client_rate,
+        is_authorized: token_valid,
+    };
+}
+
+pub func runRateLimitMiddleware(ctx: MiddlewareContext, max_limit: int) -> bool {
+    if (!ctx.is_authorized) {
+        return false;
+    }
+    return ctx.client_rate <= max_limit;
+}
+
+pub func main() -> int {
+    let raw_ctx = MiddlewareContext {
+        auth_token: "bearer_secret_123",
+        client_rate: 45,
+        is_authorized: false,
+    };
+
+    let auth_ctx = runAuthMiddleware(raw_ctx);
+    let allowed = runRateLimitMiddleware(auth_ctx, 100);
+
+    if (allowed) {
+        outln("HTTP Pipeline: Request Authorized and Rate-Limit Passed.");
+    } else {
+        outln("HTTP Pipeline: Request Blocked by Middleware.");
+    }
+    return 0;
+}
