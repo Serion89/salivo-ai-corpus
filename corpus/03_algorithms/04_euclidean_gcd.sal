@@ -1,0 +1,33 @@
+module corpus.algorithms.gcd;
+
+><salivo.std.core::{outln};
+
+pub func gcd(a: int, b: int) -> int {
+    let mut x: int = a;
+    let mut y: int = b;
+
+    while (y != 0) {
+        let remainder = x % y;
+        x = y;
+        y = remainder;
+    }
+    return x;
+}
+
+pub func lcm(a: int, b: int) -> int {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
+    let common_divisor = gcd(a, b);
+    return (a * b) / common_divisor;
+}
+
+pub func main() -> int {
+    let g = gcd(48, 18);
+    let l = lcm(12, 15);
+
+    outln($"GCD(48, 18) = {g:str}");
+    outln($"LCM(12, 15) = {l:str}");
+
+    return 0;
+}

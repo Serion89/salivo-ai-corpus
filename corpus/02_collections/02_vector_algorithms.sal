@@ -1,0 +1,39 @@
+module corpus.collections.algorithms;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func findIndex(list: Vec<int>, target: int) -> Option<int> {
+    let size = veclen<int>(list);
+    for (let mut i = 0; i < size; i = i + 1) {
+        if (get<int>(list, i) == target) {
+            return some(i);
+        }
+    }
+    return none();
+}
+
+pub func sumElements(list: Vec<int>) -> int {
+    let size = veclen<int>(list);
+    let mut total: int = 0;
+    for (let mut i = 0; i < size; i = i + 1) {
+        total = total + get<int>(list, i);
+    }
+    return total;
+}
+
+pub func main() -> int {
+    let mut numbers = vecNew<int>();
+    numbers = push<int>(numbers, 15);
+    numbers = push<int>(numbers, 25);
+    numbers = push<int>(numbers, 35);
+    numbers = push<int>(numbers, 45);
+
+    let total = sumElements(numbers);
+    outln($"Sum of elements: {total:str}");
+
+    let search_res = findIndex(numbers, 35);
+    outln("Search completed successfully.");
+
+    return 0;
+}

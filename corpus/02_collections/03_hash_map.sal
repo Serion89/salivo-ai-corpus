@@ -1,0 +1,22 @@
+module corpus.collections.hashmap;
+
+><salivo.std.core::{outln, Option};
+><salivo.std.option::{unwrapOr};
+><salivo.std.collections::{Map, mapNew, put, lookup};
+
+pub func main() -> int {
+    let mut scores = mapNew<string, int>();
+    scores = put<string, int>(scores, "Alice", 95);
+    scores = put<string, int>(scores, "Bob", 88);
+
+    let alice_score_opt = lookup<string, int>(scores, "Alice");
+    let alice_score = unwrapOr<int>(alice_score_opt, 0);
+
+    let charlie_score_opt = lookup<string, int>(scores, "Charlie");
+    let charlie_score = unwrapOr<int>(charlie_score_opt, -1);
+
+    outln($"Alice's score: {alice_score:str}");
+    outln($"Charlie's score: {charlie_score:str}");
+
+    return 0;
+}

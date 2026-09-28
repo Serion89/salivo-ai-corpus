@@ -1,0 +1,23 @@
+module corpus.basics.datatypes;
+
+><salivo.std.core::{outln, Option, some, none, Result, ok, err};
+
+pub func main() -> int {
+    // 1. Primitive types
+    let count: int = 42;
+    let ratio: float = 3.14159;
+    let is_ready: bool = true;
+    let message: string = "Salivo Systems Language";
+
+    outln($"Count: {count:str}, Ready: {message}");
+
+    // 2. Monadic Option type
+    let user_id: Option<int> = some(101);
+    let missing_id: Option<int> = none();
+
+    // 3. Monadic Result type
+    let success: Result<int, string> = ok(200);
+    let failure: Result<int, string> = err("Resource not found");
+
+    return 0;
+}

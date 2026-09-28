@@ -1,0 +1,38 @@
+module corpus.traits.structs;
+
+><salivo.std.core::{outln};
+
+pub enum Membership {
+    Standard,
+    Premium,
+    Enterprise
+}
+
+pub struct Member {
+    int id;
+    string name;
+    Membership tier;
+}
+
+pub trait Describable {
+    func describe(self) -> string;
+}
+
+impl Describable for Member {
+    func describe(self) -> string {
+        return $"[Member #{self.id:str}] {self.name}";
+    }
+}
+
+pub func main() -> int {
+    let user = Member {
+        id: 42,
+        name: "Alice",
+        tier: Membership::Premium,
+    };
+
+    let info = user.describe();
+    outln(info);
+
+    return 0;
+}

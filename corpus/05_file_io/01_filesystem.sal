@@ -1,0 +1,21 @@
+module corpus.fs.filesystem;
+
+><salivo.std.core::{outln};
+><salivo.std.fs::{pathExists, pathJoin};
+><salivo.std.process::{cwd};
+
+pub func main() -> int {
+    let current_dir = cwd();
+    outln($"Current working directory: {current_dir}");
+
+    let config_path = pathJoin(current_dir, "README.md");
+    let file_exists = pathExists(config_path);
+
+    if (file_exists) {
+        outln("Verified: README.md exists in working directory.");
+    } else {
+        outln("README.md was not located at target path.");
+    }
+
+    return 0;
+}

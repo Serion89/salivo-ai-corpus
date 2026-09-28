@@ -1,0 +1,21 @@
+module corpus.basics.interpolation;
+
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    let raw_title = "   salivo systems core   ";
+    let version_code: int = 4;
+    let build_number: int = 128;
+
+    // String template interpolation with postfix formatters
+    // Note: {val:str} formats integer as string
+    let header = $"Project: {raw_title:trim:upper}";
+    let details = $"Version: {version_code:str}, Build: {build_number:str}";
+    let length_info = $"Raw length: {raw_title:len:str} characters";
+
+    outln(header);
+    outln(details);
+    outln(length_info);
+
+    return 0;
+}

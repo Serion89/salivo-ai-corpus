@@ -1,0 +1,39 @@
+module corpus.algorithms.fibonacci;
+
+><salivo.std.core::{outln};
+
+pub func fibIterative(n: int) -> int {
+    if (n <= 0) {
+        return 0;
+    }
+    if (n == 1) {
+        return 1;
+    }
+
+    let mut a: int = 0;
+    let mut b: int = 1;
+
+    for (let mut i = 2; i <= n; i = i + 1) {
+        let next_val = a + b;
+        a = b;
+        b = next_val;
+    }
+    return b;
+}
+
+pub func factorial(n: int) -> int {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+pub func main() -> int {
+    let fib_7 = fibIterative(7);
+    let fact_5 = factorial(5);
+
+    outln($"Fibonacci(7): {fib_7:str}");
+    outln($"Factorial(5): {fact_5:str}");
+
+    return 0;
+}

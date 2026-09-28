@@ -1,0 +1,19 @@
+module corpus.fs.pathinspection;
+
+><salivo.std.core::{outln};
+><salivo.std.fs::{pathJoin, filename, ext, parent, normalize};
+
+pub func main() -> int {
+    let raw_path = "C:/projects/salivo/src/main.sal";
+    let norm = normalize(raw_path);
+    let fname = filename(raw_path);
+    let extension = ext(raw_path);
+    let par_dir = parent(raw_path);
+
+    outln($"Normalized path: {norm}");
+    outln($"Filename: {fname}");
+    outln($"Extension: {extension}");
+    outln($"Parent directory: {par_dir}");
+
+    return 0;
+}

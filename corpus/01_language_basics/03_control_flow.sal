@@ -1,0 +1,52 @@
+module corpus.basics.controlflow;
+
+><salivo.std.core::{outln};
+
+pub enum Severity {
+    Low,
+    Medium,
+    High,
+    Critical
+}
+
+pub func main() -> int {
+    let score: int = 85;
+    let mut grade = "F";
+
+    // 1. Conditional Branching
+    if (score >= 90) {
+        grade = "A";
+    } else if (score >= 80) {
+        grade = "B";
+    } else {
+        grade = "C";
+    }
+    outln($"Grade assigned: {grade}");
+
+    // 2. 3-Clause For Loop
+    for (let mut i = 0; i < 4; i = i + 1) {
+        if (i == 2) {
+            continue;
+        }
+        outln($"For loop step: {i:str}");
+    }
+
+    // 3. While Loop
+    let mut countdown: int = 3;
+    while (countdown > 0) {
+        outln($"Countdown: {countdown:str}");
+        countdown = countdown - 1;
+    }
+
+    // 4. Pattern Matching
+    let current_sev = Severity::High;
+    let alert_msg = match current_sev {
+        Severity::Critical => "Urgent Action Required",
+        Severity::High => "High Priority Alert",
+        Severity::Medium => "Standard Notice",
+        Severity::Low => "Informational",
+    };
+    outln($"Alert status: {alert_msg}");
+
+    return 0;
+}

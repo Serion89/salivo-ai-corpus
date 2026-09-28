@@ -1,0 +1,40 @@
+module corpus.algorithms.bubblesort;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get, veclen};
+
+pub func bubbleSort(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let limit = n - i - 1;
+        for (let mut j = 0; j < limit; j = j + 1) {
+            let next_idx = j + 1;
+            let a = get<int>(list, j);
+            let b = get<int>(list, next_idx);
+            if (a > b) {
+                // Swap in-place
+                set<int>(list, j, b);
+                set<int>(list, next_idx, a);
+            }
+        }
+    }
+}
+
+pub func main() -> int {
+    let mut arr = vecNew<int>();
+    arr = push<int>(arr, 64);
+    arr = push<int>(arr, 25);
+    arr = push<int>(arr, 12);
+    arr = push<int>(arr, 22);
+    arr = push<int>(arr, 11);
+
+    bubbleSort(arr);
+
+    let count = veclen<int>(arr);
+    for (let mut k = 0; k < count; k = k + 1) {
+        let val = get<int>(arr, k);
+        outln($"Sorted element {k:str}: {val:str}");
+    }
+
+    return 0;
+}

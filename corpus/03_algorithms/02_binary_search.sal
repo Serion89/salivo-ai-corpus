@@ -1,0 +1,38 @@
+module corpus.algorithms.binarysearch;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func binarySearch(sorted_list: Vec<int>, target: int) -> Option<int> {
+    let mut low: int = 0;
+    let mut high: int = veclen<int>(sorted_list) - 1;
+
+    while (low <= high) {
+        let mid: int = (low + high) / 2;
+        let mid_val: int = get<int>(sorted_list, mid);
+
+        if (mid_val == target) {
+            return some(mid);
+        } else if (mid_val < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return none();
+}
+
+pub func main() -> int {
+    let mut numbers = vecNew<int>();
+    numbers = push<int>(numbers, 10);
+    numbers = push<int>(numbers, 20);
+    numbers = push<int>(numbers, 30);
+    numbers = push<int>(numbers, 40);
+    numbers = push<int>(numbers, 50);
+
+    let found = binarySearch(numbers, 30);
+    let missing = binarySearch(numbers, 99);
+
+    outln("Binary search completed successfully.");
+    return 0;
+}

@@ -1,0 +1,30 @@
+module corpus.collections.vectors;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, insert, remove, get, veclen};
+
+pub func main() -> int {
+    let mut items = vecNew<int>();
+
+    // 1. Push elements to the back
+    items = push<int>(items, 10);
+    items = push<int>(items, 20);
+    items = push<int>(items, 40);
+
+    // 2. Insert element at index 2
+    items = insert<int>(items, 2, 30);
+
+    // 3. Remove element at index 0
+    items = remove<int>(items, 0);
+
+    // 4. Iterate over vector elements
+    let length = veclen<int>(items);
+    outln($"Total items count: {length:str}");
+
+    for (let mut i = 0; i < length; i = i + 1) {
+        let value = get<int>(items, i);
+        outln($"Item at {i:str} = {value:str}");
+    }
+
+    return 0;
+}

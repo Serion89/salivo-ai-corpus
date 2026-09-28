@@ -1,0 +1,25 @@
+# Build and binary artifacts
+build/
+*.exe
+*.obj
+*.pdb
+*.ll
+*.bc
+*.o
+*.a
+*.lib
+
+# Python cache & tooling
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+
+# IDE / System
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+module corpus.basics.hello;
+
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    outln("Hello from Salivo AI Corpus!");
+    return 0;
+}

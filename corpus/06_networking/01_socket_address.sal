@@ -1,0 +1,12 @@
+module corpus.net.sockaddr;
+
+><salivo.std.core::{outln};
+><salivo.std.net::{IPAddress, SocketAddress, ipv4, sockaddr};
+
+pub func main() -> int {
+    let local_ip = ipv4(127, 0, 0, 1);
+    let server_addr = sockaddr(local_ip, 8080);
+
+    outln($"Target address configured on port: {server_addr.port:str}");
+    return 0;
+}

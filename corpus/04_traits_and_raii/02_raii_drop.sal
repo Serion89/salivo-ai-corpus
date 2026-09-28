@@ -1,0 +1,29 @@
+module corpus.traits.raii;
+
+><salivo.std.core::{outln, Drop};
+
+pub struct FileHandle {
+    int descriptor;
+    string file_name;
+}
+
+impl Drop for FileHandle {
+    func drop(self) {
+        outln($"[RAII] Automatically closing descriptor #{self.descriptor:str} for '{self.file_name}'");
+    }
+}
+
+pub func processFile() {
+    let handle = FileHandle {
+        descriptor: 104,
+        file_name: "secure_payload.bin",
+    };
+    outln($"Active inside scope: using '{handle.file_name}'");
+}
+
+pub func main() -> int {
+    outln("Before calling processFile()...");
+    processFile();
+    outln("After processFile() completed.");
+    return 0;
+}
