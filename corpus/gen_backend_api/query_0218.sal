@@ -1,0 +1,13 @@
+module corpus.gen.backend.query_218;
+><salivo.std.core::{outln};
+><salivo.std.collections::{HashMap, mapNew, put, lookup};
+><salivo.std.option::{unwrapOr};
+
+pub func main() -> int {
+    let mut m = mapNew<string, string>();
+    m = put<string, string>(m, "page", "9");
+    let opt = lookup<string, string>(m, "page");
+    let p = unwrapOr<string>(opt, "1");
+    outln($"Page query parameter: {p}");
+    return 0;
+}

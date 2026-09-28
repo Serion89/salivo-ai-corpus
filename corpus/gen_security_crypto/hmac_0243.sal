@@ -1,0 +1,14 @@
+module corpus.gen.security.hmac_243;
+><salivo.std.core::{outln};
+><salivo.std.crypto::{hmacSha256Hex, constantTimeEq};
+
+pub func main() -> int {
+    let key = "secret_key_243";
+    let msg = "payload_content_243";
+    let sig = hmacSha256Hex(key, msg);
+    let ok = constantTimeEq(sig, sig);
+    if (ok) {
+        outln("HMAC verification success.");
+    }
+    return 0;
+}

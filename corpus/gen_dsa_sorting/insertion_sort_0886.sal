@@ -1,0 +1,27 @@
+module corpus.gen.dsa.insertion_886;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get, veclen};
+
+pub func insertionSort(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut a = 1; a < n; a = a + 1) {
+        let key = get<int>(list, a);
+        let mut b: int = a - 1;
+        while (b >= 0 && get<int>(list, b) > key) {
+            set<int>(list, b + 1, get<int>(list, b));
+            b = b - 1;
+        }
+        set<int>(list, b + 1, key);
+    }
+}
+
+pub func main() -> int {
+    let mut v: Vec<int> = vecNew<int>();
+    v = push<int>(v, 105);
+    v = push<int>(v, 40);
+    v = push<int>(v, 70);
+    insertionSort(v);
+    let first = get<int>(v, 0);
+    outln($"Insertion min: {first:str}");
+    return 0;
+}

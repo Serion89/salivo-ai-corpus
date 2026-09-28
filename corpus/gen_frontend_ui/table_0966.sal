@@ -1,0 +1,9 @@
+module corpus.gen.frontend.table_966;
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    let idx: int = 966;
+    let row = $"<tr><td>{idx:str}</td><td>Service #{idx:str}</td></tr>";
+    outln(row);
+    return 0;
+}

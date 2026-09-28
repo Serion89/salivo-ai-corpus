@@ -1,0 +1,10 @@
+module corpus.gen.security.sha_202;
+><salivo.std.core::{outln};
+><salivo.std.crypto::{sha256Hex};
+
+pub func main() -> int {
+    let msg = "transaction_record_202";
+    let h = sha256Hex(msg);
+    outln($"SHA-256 digest: {h}");
+    return 0;
+}

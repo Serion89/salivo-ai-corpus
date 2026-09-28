@@ -1,0 +1,24 @@
+module corpus.gen.dsa.lsearch_263;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func countGreaterThan(v: Vec<int>, threshold: int) -> int {
+    let n = veclen<int>(v);
+    let mut c: int = 0;
+    for (let mut a = 0; a < n; a = a + 1) {
+        if (get<int>(v, a) > threshold) {
+            c = c + 1;
+        }
+    }
+    return c;
+}
+
+pub func main() -> int {
+    let mut v: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < 20; k = k + 1) {
+        v = push<int>(v, 20 + k * 4);
+    }
+    let count = countGreaterThan(v, 73);
+    outln($"Matches above threshold: {count:str}");
+    return 0;
+}

@@ -1,0 +1,17 @@
+module corpus.gen.backend.mid_828;
+><salivo.std.core::{outln};
+
+pub struct Request { string token; int id; }
+
+pub func checkToken(req: Request) -> bool {
+    return req.token == "valid_token";
+}
+
+pub func main() -> int {
+    let req = Request { token: "valid_token", id: 828 };
+    let ok = checkToken(req);
+    if (ok) {
+        outln("Middleware pass.");
+    }
+    return 0;
+}

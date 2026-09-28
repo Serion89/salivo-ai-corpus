@@ -1,0 +1,22 @@
+module corpus.gen.math.pow_972;
+><salivo.std.core::{outln};
+
+pub func modPow(base_val: int, exp_val: int, modulus: int) -> int {
+    let mut res: int = 1;
+    let mut b: int = base_val % modulus;
+    let mut e: int = exp_val;
+    while (e > 0) {
+        if (e % 2 == 1) {
+            res = (res * b) % modulus;
+        }
+        e = e / 2;
+        b = (b * b) % modulus;
+    }
+    return res;
+}
+
+pub func main() -> int {
+    let p = modPow(4, 9, 1000);
+    outln($"Pow mod 1000: {p:str}");
+    return 0;
+}

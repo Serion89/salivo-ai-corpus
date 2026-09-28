@@ -1,0 +1,12 @@
+module corpus.gen.fintech.ledger_886;
+><salivo.std.core::{outln};
+
+pub func simpleInterest(principal: int, rate: int, years: int) -> int {
+    return (principal * rate * years) / 100;
+}
+
+pub func main() -> int {
+    let interest = simpleInterest(45300, 5, 3);
+    outln($"Interest computed: {interest:str}");
+    return 0;
+}

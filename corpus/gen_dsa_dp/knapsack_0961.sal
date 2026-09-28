@@ -1,0 +1,31 @@
+module corpus.gen.dsa.knapsack_961;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get};
+><salivo.std.math::{max};
+
+pub struct Item { int weight; int value; }
+
+pub func main() -> int {
+    let capacity: int = 7;
+    let mut dp: Vec<int> = vecNew<int>();
+    for (let mut a = 0; a <= capacity; a = a + 1) {
+        dp = push<int>(dp, 0);
+    }
+    let mut items: Vec<Item> = vecNew<Item>();
+    items = push<Item>(items, Item { weight: 2, value: 3 });
+    items = push<Item>(items, Item { weight: 3, value: 5 });
+    items = push<Item>(items, Item { weight: 4, value: 7 });
+
+    for (let mut j = 0; j < 3; j = j + 1) {
+        let it = get<Item>(items, j);
+        let mut w: int = capacity;
+        while (w >= it.weight) {
+            let best = max(get<int>(dp, w), get<int>(dp, w - it.weight) + it.value);
+            set<int>(dp, w, best);
+            w = w - 1;
+        }
+    }
+    let res = get<int>(dp, capacity);
+    outln($"Optimal knapsack value: {res:str}");
+    return 0;
+}

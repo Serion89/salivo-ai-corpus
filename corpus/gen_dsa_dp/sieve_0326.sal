@@ -1,0 +1,32 @@
+module corpus.gen.dsa.sieve_326;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get};
+
+pub func countPrimes(limit: int) -> int {
+    if (limit < 2) { return 0; }
+    let mut flags: Vec<int> = vecNew<int>();
+    for (let mut a = 0; a <= limit; a = a + 1) {
+        flags = push<int>(flags, 0);
+    }
+    for (let mut p = 2; p * p <= limit; p = p + 1) {
+        if (get<int>(flags, p) == 0) {
+            for (let mut m = p * p; m <= limit; m = m + p) {
+                set<int>(flags, m, 1);
+            }
+        }
+    }
+    let mut count: int = 0;
+    for (let mut k = 2; k <= limit; k = k + 1) {
+        if (get<int>(flags, k) == 0) {
+            count = count + 1;
+        }
+    }
+    return count;
+}
+
+pub func main() -> int {
+    let limit_val: int = 26;
+    let c = countPrimes(limit_val);
+    outln($"Primes count: {c:str}");
+    return 0;
+}

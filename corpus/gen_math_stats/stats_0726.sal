@@ -1,0 +1,18 @@
+module corpus.gen.math.stats_726;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func main() -> int {
+    let mut v: Vec<int> = vecNew<int>();
+    v = push<int>(v, 43);
+    v = push<int>(v, 58);
+    v = push<int>(v, 68);
+    let n = veclen<int>(v);
+    let mut total: int = 0;
+    for (let mut k = 0; k < n; k = k + 1) {
+        total = total + get<int>(v, k);
+    }
+    let avg = total / n;
+    outln($"Average: {avg:str}");
+    return 0;
+}

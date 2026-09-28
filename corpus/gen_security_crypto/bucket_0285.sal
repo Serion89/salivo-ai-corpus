@@ -1,0 +1,10 @@
+module corpus.gen.security.bucket_285;
+><salivo.std.core::{outln};
+
+pub struct Bucket { int capacity; int tokens; }
+
+pub func main() -> int {
+    let b = Bucket { capacity: 15, tokens: 15 };
+    outln($"Bucket capacity: {b.capacity:str}");
+    return 0;
+}

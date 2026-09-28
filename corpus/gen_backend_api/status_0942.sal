@@ -1,0 +1,17 @@
+module corpus.gen.backend.status_942;
+><salivo.std.core::{outln};
+
+pub func isSuccess(status: int) -> bool {
+    return status >= 200 && status < 300;
+}
+
+pub func main() -> int {
+    let st: int = 204;
+    let ok = isSuccess(st);
+    if (ok) {
+        outln($"Status is SUCCESS");
+    } else {
+        outln($"Status is NOT SUCCESS");
+    }
+    return 0;
+}

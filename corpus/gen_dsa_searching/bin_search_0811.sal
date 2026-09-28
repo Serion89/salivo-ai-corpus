@@ -1,0 +1,33 @@
+module corpus.gen.dsa.bsearch_811;
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func search(v: Vec<int>, target: int) -> Option<int> {
+    let mut l: int = 0;
+    let mut r: int = veclen<int>(v) - 1;
+    while (l <= r) {
+        let m: int = (l + r) / 2;
+        let val = get<int>(v, m);
+        if (val == target) {
+            return some(m);
+        } else if (val < target) {
+            l = m + 1;
+        } else {
+            r = m - 1;
+        }
+    }
+    return none();
+}
+
+pub func main() -> int {
+    let mut v: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < 25; k = k + 1) {
+        v = push<int>(v, 10 + k * 5);
+    }
+    let target_val: int = 65;
+    let res = search(v, target_val);
+    if (res.is_some) {
+        outln($"Found target: {target_val:str}");
+    }
+    return 0;
+}

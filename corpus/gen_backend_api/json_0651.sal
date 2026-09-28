@@ -1,0 +1,11 @@
+module corpus.gen.backend.json_651;
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    let lbrace = "{";
+    let rbrace = "}";
+    let id_val: int = 651;
+    let payload = $"{lbrace}\"id\": {id_val:str}, \"active\": true{rbrace}";
+    outln(payload);
+    return 0;
+}

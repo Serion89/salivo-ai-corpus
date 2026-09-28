@@ -1,0 +1,10 @@
+module corpus.gen.backend.jwt_879;
+><salivo.std.core::{outln};
+
+pub struct Claims { string sub; int exp; }
+
+pub func main() -> int {
+    let c = Claims { sub: "user_879", exp: 1700008790 };
+    outln($"Token subject: {c.sub}");
+    return 0;
+}

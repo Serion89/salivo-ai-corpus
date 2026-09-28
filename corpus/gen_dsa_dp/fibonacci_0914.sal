@@ -1,0 +1,22 @@
+module corpus.gen.dsa.fib_914;
+><salivo.std.core::{outln};
+
+pub func fib(n: int) -> int {
+    if (n <= 0) { return 0; }
+    if (n == 1) { return 1; }
+    let mut a: int = 0;
+    let mut b: int = 1;
+    for (let mut k = 2; k <= n; k = k + 1) {
+        let next_val = a + b;
+        a = b;
+        b = next_val;
+    }
+    return b;
+}
+
+pub func main() -> int {
+    let n_input: int = 19;
+    let res = fib(n_input);
+    outln($"Fibonacci result: {res:str}");
+    return 0;
+}

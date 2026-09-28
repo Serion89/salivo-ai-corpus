@@ -1,0 +1,12 @@
+module corpus.gen.backend.apikey_369;
+><salivo.std.core::{outln};
+
+pub struct ApiKey { string key; bool is_active; }
+
+pub func main() -> int {
+    let key = ApiKey { key: "ak_live_369", is_active: true };
+    if (key.is_active) {
+        outln("API key active.");
+    }
+    return 0;
+}

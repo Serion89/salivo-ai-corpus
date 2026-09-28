@@ -1,0 +1,12 @@
+module corpus.gen.systems.mem_920;
+><salivo.std.core::{outln};
+><salivo.std.mem::{allocate, deallocate, writei64, readi64};
+
+pub func main() -> int {
+    let addr = allocate(16, 8);
+    writei64(addr, 0, 1940);
+    let read_val = readi64(addr, 0);
+    deallocate(addr, 16, 8);
+    outln($"Memory read value: {read_val:str}");
+    return 0;
+}

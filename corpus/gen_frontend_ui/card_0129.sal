@@ -1,0 +1,11 @@
+module corpus.gen.frontend.card_129;
+><salivo.std.core::{outln};
+
+pub struct Card { string title; int likes; }
+
+pub func main() -> int {
+    let c = Card { title: "Post 129", likes: 387 };
+    let html = $"<div class='card'><h3>{c.title}</h3><span>{c.likes:str} likes</span></div>";
+    outln(html);
+    return 0;
+}

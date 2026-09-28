@@ -1,0 +1,22 @@
+module corpus.gen.dsa.lcs_225;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get};
+><salivo.std.math::{max};
+
+pub func main() -> int {
+    let mut a: Vec<int> = vecNew<int>();
+    a = push<int>(a, 10);
+    a = push<int>(a, 20);
+    a = push<int>(a, 30);
+
+    let mut b: Vec<int> = vecNew<int>();
+    b = push<int>(b, 20);
+    b = push<int>(b, 31);
+
+    let mut dp: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < 12; k = k + 1) {
+        dp = push<int>(dp, 0);
+    }
+    outln("LCS table initialized successfully.");
+    return 0;
+}

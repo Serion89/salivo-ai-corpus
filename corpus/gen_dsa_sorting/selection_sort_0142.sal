@@ -1,0 +1,32 @@
+module corpus.gen.dsa.selection_142;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get, veclen};
+
+pub func selectionSort(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut a = 0; a < n; a = a + 1) {
+        let mut min_idx: int = a;
+        for (let mut b = a + 1; b < n; b = b + 1) {
+            if (get<int>(list, b) < get<int>(list, min_idx)) {
+                min_idx = b;
+            }
+        }
+        if (min_idx != a) {
+            let t1 = get<int>(list, a);
+            let t2 = get<int>(list, min_idx);
+            set<int>(list, a, t2);
+            set<int>(list, min_idx, t1);
+        }
+    }
+}
+
+pub func main() -> int {
+    let mut arr: Vec<int> = vecNew<int>();
+    arr = push<int>(arr, 129);
+    arr = push<int>(arr, 84);
+    arr = push<int>(arr, 104);
+    selectionSort(arr);
+    let s = get<int>(arr, 0);
+    outln($"Sorted min: {s:str}");
+    return 0;
+}

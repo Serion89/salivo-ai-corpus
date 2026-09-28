@@ -1,0 +1,31 @@
+module corpus.gen.dsa.bubble_831;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, set, get, veclen};
+
+pub func sortList(list: Vec<int>) {
+    let n = veclen<int>(list);
+    for (let mut a = 0; a < n; a = a + 1) {
+        let limit = n - a - 1;
+        for (let mut b = 0; b < limit; b = b + 1) {
+            let next_idx = b + 1;
+            let v1 = get<int>(list, b);
+            let v2 = get<int>(list, next_idx);
+            if (v1 > v2) {
+                set<int>(list, b, v2);
+                set<int>(list, next_idx, v1);
+            }
+        }
+    }
+}
+
+pub func main() -> int {
+    let mut numbers: Vec<int> = vecNew<int>();
+    numbers = push<int>(numbers, 70);
+    numbers = push<int>(numbers, 40);
+    numbers = push<int>(numbers, 60);
+    numbers = push<int>(numbers, 50);
+    sortList(numbers);
+    let first = get<int>(numbers, 0);
+    outln($"Smallest element: {first:str}");
+    return 0;
+}

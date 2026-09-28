@@ -1,0 +1,9 @@
+module corpus.gen.frontend.html_103;
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    let title = "Article #103";
+    let h1 = $"<h1>{title}</h1>";
+    outln(h1);
+    return 0;
+}

@@ -1,0 +1,16 @@
+module corpus.gen.systems.raii_466;
+><salivo.std.core::{outln, Drop};
+
+pub struct ResourceGuard { int id; }
+
+impl Drop for ResourceGuard {
+    func drop(self) {
+        outln($"Cleaning up resource #{self.id:str}");
+    }
+}
+
+pub func main() -> int {
+    let g = ResourceGuard { id: 466 };
+    outln("Scope running...");
+    return 0;
+}

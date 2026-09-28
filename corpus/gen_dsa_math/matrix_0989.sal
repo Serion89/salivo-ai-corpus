@@ -1,0 +1,16 @@
+module corpus.gen.math.matrix_989;
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func main() -> int {
+    let rows: int = 4;
+    let cols: int = 2;
+    let total = rows * cols;
+    let mut data: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < total; k = k + 1) {
+        data = push<int>(data, k * 5);
+    }
+    let len_v = veclen<int>(data);
+    outln($"Matrix total cells: {len_v:str}");
+    return 0;
+}

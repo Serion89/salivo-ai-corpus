@@ -1,0 +1,21 @@
+module corpus.gen.math.gcd_413;
+><salivo.std.core::{outln};
+
+pub func gcd(a: int, b: int) -> int {
+    let mut x: int = a;
+    let mut y: int = b;
+    while (y != 0) {
+        let r = x % y;
+        x = y;
+        y = r;
+    }
+    return x;
+}
+
+pub func main() -> int {
+    let x_val: int = 63;
+    let y_val: int = 35;
+    let g = gcd(x_val, y_val);
+    outln($"GCD computed: {g:str}");
+    return 0;
+}

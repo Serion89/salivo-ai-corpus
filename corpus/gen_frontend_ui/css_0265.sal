@@ -1,0 +1,13 @@
+module corpus.gen.frontend.css_265;
+><salivo.std.core::{outln};
+
+pub func main() -> int {
+    let mut classes = "btn";
+    if (0 == 1) {
+        classes = $"{classes} btn-primary";
+    } else {
+        classes = $"{classes} btn-secondary";
+    }
+    outln($"Class: {classes}");
+    return 0;
+}

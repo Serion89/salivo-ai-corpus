@@ -1,0 +1,15 @@
+module corpus.gen.backend.router_696;
+><salivo.std.core::{outln};
+
+pub func route(method: string, path: string) -> int {
+    if (method == "GET" && path == "/v1/api/endpoint_46") {
+        return 200;
+    }
+    return 404;
+}
+
+pub func main() -> int {
+    let status = route("GET", "/v1/api/endpoint_46");
+    outln($"Route status: {status:str}");
+    return 0;
+}

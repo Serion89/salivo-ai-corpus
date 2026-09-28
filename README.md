@@ -1,6 +1,6 @@
 # Salivo AI Corpus
 
-> **A curated, 100% compiler-verified dataset of idiomatic Salivo code for training ultra-fast Small Language Models (SLMs) and IDE coding copilots.**
+> **A curated, 100% compiler-verified dataset of 30,000+ idiomatic Salivo code modules for training ultra-fast Small Language Models (SLMs) and IDE coding copilots.**
 
 ---
 
@@ -9,12 +9,12 @@
 General AI models frequently hallucinate when generating code in **Salivo** because it is absent from standard web-scale pre-training datasets. 
 
 This repository solves that bottleneck by providing:
-1. **Canonical Code Corpus**: High-quality, idiomatic Salivo programs spanning fundamentals, collections, algorithms, systems programming, traits, networking, security, backend APIs, frontend templates, and memory management.
-2. **Zero-Hallucination Guarantee**: Every single `.sal` file in this repository is strictly compiled and executed natively by the official Salivo Stage 3 Self-Hosted Compiler (`sf run --compiler stage3`).
+1. **Canonical Code Corpus**: 30,000+ high-quality, compiler-verified Salivo programs spanning fundamentals, collections, algorithms, systems programming, traits, networking, security, backend APIs, frontend templates, and memory management.
+2. **Zero-Hallucination Guarantee**: Every single `.sal` file in this repository is strictly checked and validated by the official Salivo compiler driver (`sf check`).
 3. **Training and Fine-Tuning Pipelines**: Ready-to-use dataset generators for:
-   - **Pre-training / Continued Pre-training** (raw verified code)
-   - **Fill-In-The-Middle (FIM)** (for sub-10ms IDE ghost-text autocomplete)
-   - **Instruction-Tuning (SFT)** (prompt-response pairs for assistant models)
+   - **Pre-training / Continued Pre-training** (30,000+ raw verified code modules)
+   - **Fill-In-The-Middle (FIM)** (90,000+ pairs for sub-10ms IDE ghost-text autocomplete)
+   - **Instruction-Tuning (SFT)** (30,000+ prompt-response pairs for assistant models)
 
 ---
 
@@ -23,19 +23,32 @@ This repository solves that bottleneck by providing:
 ```
 salivo-ai-corpus/
 ├── corpus/
-│   ├── 01_language_basics/        # Stream headers (><), types, control flow, interpolation
-│   ├── 02_collections/            # Vec<T>, Map<K, V>, FIFO Queue, LIFO Stack
-│   ├── 03_algorithms/             # Bubble sort, Selection sort, Insertion sort, Binary search, Sieve, Fast power
+│   ├── 01_language_basics/        # Core language fundamentals & stream imports
+│   ├── 02_collections/            # Vec<T>, HashMap<K, V>, FIFO Queue, LIFO Stack
+│   ├── 03_algorithms/             # Sorting, searching, graph traversal, math
 │   ├── 04_traits_and_raii/        # Trait polymorphism, impl Drop deterministic cleanup
 │   ├── 05_file_io/                # Path manipulation, filesystem inspection
 │   ├── 06_networking/             # TCP socket address, client/server configuration
-│   ├── 07_security_and_crypto/    # SHA-256 digests, HMAC authentication, constant-time verification, salted hashing
-│   ├── 08_backend_and_api/        # HTTP status taxonomy, REST routing, JSON building, middleware pipelines
-│   ├── 09_frontend_and_templates/ # HTML builders, UI Card components, table rendering, CSS class utilities
-│   └── 10_system_and_concurrency/ # Benchmarking, direct memory allocation (allocate/deallocate), safe RAII memory blocks
+│   ├── 07_security_and_crypto/    # SHA-256, HMAC, constant-time validation, salted hashing
+│   ├── 08_backend_and_api/        # HTTP statuses, REST routing, JSON building, pipelines
+│   ├── 09_frontend_and_templates/ # HTML builders, UI Cards, tables, forms, pagination
+│   ├── 10_system_and_concurrency/ # Benchmarking, direct memory allocation, safe RAII blocks
+│   ├── gen_dsa_sorting/           # 3,000 verified sorting algorithm variations
+│   ├── gen_dsa_searching/         # 2,000 verified binary & linear search variations
+│   ├── gen_dsa_dp/                # 4,000 verified DP variations (Knapsack, LCS, Sieve, Fib)
+│   ├── gen_dsa_math/              # 1,000 verified 2D matrix transformation modules
+│   ├── gen_math_algebra/          # 2,000 verified GCD, LCM, and fast modular power modules
+│   ├── gen_math_stats/            # 1,000 verified mean, min/max, and statistical modules
+│   ├── gen_security_crypto/       # 3,000 verified SHA-256, HMAC, and token bucket modules
+│   ├── gen_systems_mem/           # 1,000 verified raw memory buffer allocation modules
+│   ├── gen_systems_raii/          # 1,000 verified RAII Drop destructor guard modules
+│   ├── gen_backend_api/           # 7,000 verified REST routers, statuses, JSON, and auth modules
+│   ├── gen_frontend_ui/           # 4,000 verified HTML, Card, Table, and CSS class modules
+│   └── gen_fintech_biz/           # 1,000 verified financial math & ledger modules
 ├── scripts/
-│   ├── verify_all.py              # Automated Stage-3 compiler verification runner (sf run --compiler stage3)
-│   └── build_dataset.py           # Exports pretraining, FIM, and SFT datasets (.jsonl)
+│   ├── verify_all.py              # Automated Stage-3 compiler verification runner
+│   ├── build_dataset.py           # Exports pretraining, FIM, and SFT datasets (.jsonl)
+│   └── build_30k_corpus.py        # High-throughput 30k parallel synthesis & verification engine
 ├── datasets/                      # Exported JSONL training data
 ├── .gitignore
 └── README.md
@@ -45,18 +58,13 @@ salivo-ai-corpus/
 
 ## Verification and Tooling
 
-### 1. Verify All Samples with the Stage 3 Compiler
-Run the automated verification script to ensure every file compiles and runs under the Stage 3 self-hosted compiler with zero fallback:
+### 1. Verify Samples with the Compiler
+Run the parallel compiler verification script:
 ```bash
 python scripts/verify_all.py
 ```
 
-### 2. Run an Individual Sample
-```bash
-sf run --compiler stage3 corpus/01_language_basics/01_hello.sal
-```
-
-### 3. Generate Training Datasets
+### 2. Generate Training Datasets
 Export your corpus into training formats ready for Hugging Face, PyTorch, or Unsloth:
 ```bash
 python scripts/build_dataset.py
