@@ -59,9 +59,11 @@ def main():
 
     pretrain_file = output_dir / "pretrain_corpus.jsonl"
     sft_file = output_dir / "instruct_sft.jsonl"
+    smart_sft_file = output_dir / "smart_ai_expert_sft.jsonl"
 
     pretrain_count = 0
     sft_count = 0
+    smart_sft_count = 0
     fim_count = 0
 
     fim_part1 = output_dir / "fim_part1.jsonl"
@@ -69,6 +71,7 @@ def main():
 
     f_fim1 = open(fim_part1, "w", encoding="utf-8")
     f_fim2 = open(fim_part2, "w", encoding="utf-8")
+    f_smart = open(smart_sft_file, "w", encoding="utf-8")
 
     with open(pretrain_file, "w", encoding="utf-8") as f_pre, \
          open(sft_file, "w", encoding="utf-8") as f_sft:
@@ -93,24 +96,32 @@ def main():
             # 3. SFT / Instruct entry
             title = Path(rel_path).stem.replace("_", " ").title()
             instruction = f"Write an idiomatic Salivo module implementing {title} with standard imports and verification."
-            f_sft.write(json.dumps({
+            sft_entry = json.dumps({
                 "messages": [
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": instruction},
                     {"role": "assistant", "content": f"```salivo\n{code_text}\n```"}
                 ]
-            }) + "\n")
+            }) + "\n"
+            f_sft.write(sft_entry)
             sft_count += 1
+
+            # 4. Dedicated Expert dataset for smart AI fine-tuning
+            if "smart_ai_expert_code" in rel_path:
+                f_smart.write(sft_entry)
+                smart_sft_count += 1
 
     f_fim1.close()
     f_fim2.close()
+    f_smart.close()
 
     print("\n==========================================")
     print("Dataset Generation Complete (GitHub-Safe Chunking):")
-    print(f"  Pretrain samples: {pretrain_count} -> {pretrain_file.name}")
-    print(f"  FIM Part 1:       {fim_count // 2} -> {fim_part1.name}")
-    print(f"  FIM Part 2:       {fim_count - (fim_count // 2)} -> {fim_part2.name}")
-    print(f"  SFT chat samples: {sft_count} -> {sft_file.name}")
+    print(f"  Pretrain samples:  {pretrain_count} -> {pretrain_file.name}")
+    print(f"  FIM Part 1:        {fim_count // 2} -> {fim_part1.name}")
+    print(f"  FIM Part 2:        {fim_count - (fim_count // 2)} -> {fim_part2.name}")
+    print(f"  SFT all samples:   {sft_count} -> {sft_file.name}")
+    print(f"  Smart AI Expert:   {smart_sft_count} -> {smart_sft_file.name}")
     print("==========================================")
 
 if __name__ == "__main__":

@@ -828,8 +828,9 @@ def main():
     t_start = time.time()
 
     # Step 1: Generate all files
+    scratch_root = corpus_root / "to_train_llm_from_scratch"
     for fam_idx, (subdir_name, gen_func) in enumerate(ALL_GENERATORS):
-        out_dir = corpus_root / f"gen_{subdir_name}"
+        out_dir = scratch_root / f"gen_{subdir_name}"
         out_dir.mkdir(parents=True, exist_ok=True)
         for i in range(batch_size):
             fp = gen_func(i, out_dir)
