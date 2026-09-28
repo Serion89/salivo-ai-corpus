@@ -1,0 +1,58 @@
+module corpus.security.tokenbucket;
+
+><salivo.std.core::{outln};
+
+pub struct TokenBucket {
+    int capacity;
+    int current_tokens;
+    int refill_rate_per_sec;
+    int last_refill_timestamp;
+}
+
+pub func bucketCreate(cap: int, rate: int, start_time: int) -> TokenBucket {
+    return TokenBucket {
+        capacity: cap,
+        current_tokens: cap,
+        refill_rate_per_sec: rate,
+        last_refill_timestamp: start_time,
+    };
+}
+
+pub func bucketConsume(bucket: TokenBucket, tokens_needed: int, current_time: int) -> TokenBucket {
+    let elapsed_sec = current_time - bucket.last_refill_timestamp;
+    let mut tokens = bucket.current_tokens;
+
+    if (elapsed_sec > 0) {
+        let added_tokens = elapsed_sec * bucket.refill_rate_per_sec;
+        tokens = tokens + added_tokens;
+        if (tokens > bucket.capacity) {
+            tokens = bucket.capacity;
+        }
+    }
+
+    if (tokens >= tokens_needed) {
+        tokens = tokens - tokens_needed;
+    }
+
+    return TokenBucket {
+        capacity: bucket.capacity,
+        current_tokens: tokens,
+        refill_rate_per_sec: bucket.refill_rate_per_sec,
+        last_refill_timestamp: current_time,
+    };
+}
+
+pub func main() -> int {
+    let mut b = bucketCreate(10, 2, 100);
+    outln($"Initial tokens: {b.current_tokens:str} / {b.capacity:str}");
+
+    // Consume 6 tokens
+    b = bucketConsume(b, 6, 100);
+    outln($"Tokens after consuming 6: {b.current_tokens:str}");
+
+    // Advance time by 2 seconds (refills 4 tokens: 4 + 4 = 8)
+    b = bucketConsume(b, 0, 102);
+    outln($"Tokens after 2s refill: {b.current_tokens:str}");
+
+    return 0;
+}

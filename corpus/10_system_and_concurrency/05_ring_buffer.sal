@@ -1,0 +1,88 @@
+module corpus.system.ringbuffer;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct CircularBuffer {
+    Vec<int> buffer;
+    int capacity;
+    int head;
+    int tail;
+    int count;
+}
+
+pub func ringCreate(cap: int) -> CircularBuffer {
+    let mut storage: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < cap; i = i + 1) {
+        storage = push<int>(storage, 0);
+    }
+    return CircularBuffer {
+        buffer: storage,
+        capacity: cap,
+        head: 0,
+        tail: 0,
+        count: 0,
+    };
+}
+
+pub func ringWrite(ring: CircularBuffer, val: int) -> CircularBuffer {
+    if (ring.count == ring.capacity) {
+        // Buffer full
+        return ring;
+    }
+
+    set<int>(ring.buffer, ring.tail, val);
+    let next_tail = (ring.tail + 1) % ring.capacity;
+    return CircularBuffer {
+        buffer: ring.buffer,
+        capacity: ring.capacity,
+        head: ring.head,
+        tail: next_tail,
+        count: ring.count + 1,
+    };
+}
+
+pub func ringRead(ring: CircularBuffer) -> Option<int> {
+    if (ring.count == 0) {
+        return none();
+    }
+    let val = get<int>(ring.buffer, ring.head);
+    return some(val);
+}
+
+pub func ringAdvance(ring: CircularBuffer) -> CircularBuffer {
+    if (ring.count == 0) {
+        return ring;
+    }
+    let next_head = (ring.head + 1) % ring.capacity;
+    return CircularBuffer {
+        buffer: ring.buffer,
+        capacity: ring.capacity,
+        head: next_head,
+        tail: ring.tail,
+        count: ring.count - 1,
+    };
+}
+
+pub func main() -> int {
+    let mut rb = ringCreate(3);
+    rb = ringWrite(rb, 111);
+    rb = ringWrite(rb, 222);
+    rb = ringWrite(rb, 333);
+
+    outln($"Ring buffer populated count: {rb.count:str} / {rb.capacity:str}");
+
+    let item1 = ringRead(rb);
+    rb = ringAdvance(rb);
+
+    let item2 = ringRead(rb);
+    rb = ringAdvance(rb);
+
+    // Overwrite wrap-around
+    rb = ringWrite(rb, 444);
+
+    let count_after = rb.count;
+    outln($"Ring buffer count after advance & wrap-around: {count_after:str}");
+
+    return 0;
+}

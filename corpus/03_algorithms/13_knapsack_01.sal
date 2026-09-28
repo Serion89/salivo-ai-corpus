@@ -1,0 +1,47 @@
+module corpus.algorithms.knapsack;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+><salivo.std.math::{max};
+
+pub struct Item {
+    int weight;
+    int value;
+}
+
+pub func knapsack01(items: Vec<Item>, capacity: int) -> int {
+    let num_items = veclen<Item>(items);
+    // DP array of size capacity + 1
+    let mut dp: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i <= capacity; i = i + 1) {
+        dp = push<int>(dp, 0);
+    }
+
+    for (let mut i = 0; i < num_items; i = i + 1) {
+        let it = get<Item>(items, i);
+        let mut w: int = capacity;
+        while (w >= it.weight) {
+            let prev_best = get<int>(dp, w);
+            let with_item = get<int>(dp, w - it.weight) + it.value;
+            let best = max(prev_best, with_item);
+            set<int>(dp, w, best);
+            w = w - 1;
+        }
+    }
+
+    return get<int>(dp, capacity);
+}
+
+pub func main() -> int {
+    let mut items: Vec<Item> = vecNew<Item>();
+    items = push<Item>(items, Item { weight: 2, value: 3 });
+    items = push<Item>(items, Item { weight: 3, value: 4 });
+    items = push<Item>(items, Item { weight: 4, value: 5 });
+    items = push<Item>(items, Item { weight: 5, value: 8 });
+
+    let capacity: int = 8;
+    let max_val = knapsack01(items, capacity);
+
+    outln($"Knapsack 0/1 maximum value for capacity {capacity:str}: {max_val:str}");
+    return 0;
+}

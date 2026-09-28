@@ -1,0 +1,62 @@
+module corpus.frontend.alertbanner;
+
+><salivo.std.core::{outln};
+
+pub enum AlertSeverity {
+    Success,
+    Warning,
+    Danger,
+    Info
+}
+
+pub struct AlertMessage {
+    AlertSeverity severity;
+    string title;
+    string detail;
+    bool is_dismissible;
+}
+
+pub func renderAlert(alert: AlertMessage) -> string {
+    let sev_class = match alert.severity {
+        AlertSeverity::Success => "alert-success",
+        AlertSeverity::Warning => "alert-warning",
+        AlertSeverity::Danger => "alert-danger",
+        AlertSeverity::Info => "alert-info",
+    };
+
+    let title_tag = $"<strong>{alert.title}:</strong>";
+    let detail_tag = $"<span>{alert.detail}</span>";
+
+    let mut close_btn = "";
+    if (alert.is_dismissible) {
+        close_btn = "\n  <button type=\"button\" class=\"btn-close\" aria-label=\"Close\">&times;</button>";
+    }
+
+    return $"<div class=\"alert {sev_class}\" role=\"alert\">\n  {title_tag} {detail_tag}{close_btn}\n</div>";
+}
+
+pub func main() -> int {
+    let success_alert = AlertMessage {
+        severity: AlertSeverity::Success,
+        title: "Deployment Verified",
+        detail: "All Stage 3 compiler unit tests passed without warning.",
+        is_dismissible: true,
+    };
+
+    let error_alert = AlertMessage {
+        severity: AlertSeverity::Danger,
+        title: "Access Denied",
+        detail: "Missing bearer token in Authorization header.",
+        is_dismissible: false,
+    };
+
+    let html1 = renderAlert(success_alert);
+    let html2 = renderAlert(error_alert);
+
+    outln("Alert 1:");
+    outln(html1);
+    outln("Alert 2:");
+    outln(html2);
+
+    return 0;
+}

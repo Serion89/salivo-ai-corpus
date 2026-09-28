@@ -1,0 +1,61 @@
+module corpus.algorithms.dfs;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct Graph {
+    int num_vertices;
+    Vec<int> adj_matrix;
+}
+
+pub func graphCreate(v_count: int) -> Graph {
+    let total = v_count * v_count;
+    let mut matrix: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < total; i = i + 1) {
+        matrix = push<int>(matrix, 0);
+    }
+    return Graph {
+        num_vertices: v_count,
+        adj_matrix: matrix,
+    };
+}
+
+pub func graphAddEdge(g: Graph, u: int, v: int) {
+    let idx1 = u * g.num_vertices + v;
+    let idx2 = v * g.num_vertices + u;
+    set<int>(g.adj_matrix, idx1, 1);
+    set<int>(g.adj_matrix, idx2, 1);
+}
+
+pub func dfsExplore(g: Graph, current: int, visited: Vec<int>) {
+    set<int>(visited, current, 1);
+    outln($"Visited Vertex: {current:str}");
+
+    for (let mut neighbor = 0; neighbor < g.num_vertices; neighbor = neighbor + 1) {
+        let edge_idx = current * g.num_vertices + neighbor;
+        let has_edge = get<int>(g.adj_matrix, edge_idx);
+        let is_visited = get<int>(visited, neighbor);
+
+        if (has_edge == 1 && is_visited == 0) {
+            dfsExplore(g, neighbor, visited);
+        }
+    }
+}
+
+pub func main() -> int {
+    let g = graphCreate(5);
+    graphAddEdge(g, 0, 1);
+    graphAddEdge(g, 0, 2);
+    graphAddEdge(g, 1, 3);
+    graphAddEdge(g, 2, 4);
+
+    let mut visited: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < 5; k = k + 1) {
+        visited = push<int>(visited, 0);
+    }
+
+    outln("Starting Depth-First Search traversal from Vertex 0:");
+    dfsExplore(g, 0, visited);
+
+    return 0;
+}

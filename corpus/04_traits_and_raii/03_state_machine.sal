@@ -1,0 +1,86 @@
+module corpus.traits.statemachine;
+
+><salivo.std.core::{outln};
+
+pub enum ConnectionState {
+    Disconnected,
+    Connecting,
+    Connected,
+    Failed
+}
+
+pub struct NetworkClient {
+    int client_id;
+    ConnectionState state;
+    int retry_count;
+}
+
+pub func transition(client: NetworkClient, success: bool) -> NetworkClient {
+    if (client.state == ConnectionState::Disconnected) {
+        return NetworkClient {
+            client_id: client.client_id,
+            state: ConnectionState::Connecting,
+            retry_count: client.retry_count,
+        };
+    }
+    if (client.state == ConnectionState::Connecting) {
+        if (success) {
+            return NetworkClient {
+                client_id: client.client_id,
+                state: ConnectionState::Connected,
+                retry_count: 0,
+            };
+        } else {
+            return NetworkClient {
+                client_id: client.client_id,
+                state: ConnectionState::Failed,
+                retry_count: client.retry_count + 1,
+            };
+        }
+    }
+    if (client.state == ConnectionState::Connected) {
+        return NetworkClient {
+            client_id: client.client_id,
+            state: ConnectionState::Disconnected,
+            retry_count: 0,
+        };
+    }
+    return NetworkClient {
+        client_id: client.client_id,
+        state: ConnectionState::Connecting,
+        retry_count: client.retry_count,
+    };
+}
+
+pub func stateName(st: ConnectionState) -> string {
+    return match st {
+        ConnectionState::Disconnected => "Disconnected",
+        ConnectionState::Connecting => "Connecting",
+        ConnectionState::Connected => "Connected",
+        ConnectionState::Failed => "Failed",
+    };
+}
+
+pub func main() -> int {
+    let mut client = NetworkClient {
+        client_id: 101,
+        state: ConnectionState::Disconnected,
+        retry_count: 0,
+    };
+    let s0 = stateName(client.state);
+    outln($"Initial state: {s0}");
+
+    client = transition(client, true);
+    let s1 = stateName(client.state);
+    outln($"After attempt: {s1}");
+
+    client = transition(client, true);
+    let s2 = stateName(client.state);
+    outln($"After success: {s2}");
+
+    client = transition(client, true);
+    let s3 = stateName(client.state);
+    outln($"After disconnect: {s3}");
+
+    return 0;
+}

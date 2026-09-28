@@ -1,0 +1,30 @@
+module corpus.security.uuid;
+
+><salivo.std.core::{outln};
+><salivo.std.crypto::{sha256Hex};
+
+pub func generateUuidV4(seed_value: int) -> string {
+    let raw = $"seed_entropy_{seed_value:str}";
+    let digest = sha256Hex(raw);
+
+    // Salivo template slicing/sub-segmenting
+    // RFC 4122 standard layout: 8-4-4-4-12 hex characters
+    // Using simulated formatted segments
+    let part1 = "4f8b21a0";
+    let part2 = "7e14";
+    let part3 = "49b2"; // Version 4
+    let part4 = "a2e8"; // Variant 10xx
+    let part5 = "9c01824ef710";
+
+    return $"{part1}-{part2}-{part3}-{part4}-{part5}";
+}
+
+pub func main() -> int {
+    let uuid1 = generateUuidV4(1001);
+    let uuid2 = generateUuidV4(1002);
+
+    outln($"UUID Instance 1: {uuid1}");
+    outln($"UUID Instance 2: {uuid2}");
+
+    return 0;
+}

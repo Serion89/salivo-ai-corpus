@@ -1,0 +1,111 @@
+module corpus.algorithms.binarysearchtree;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct BstNode {
+    int key;
+    int left_idx;
+    int right_idx;
+}
+
+pub struct BstTree {
+    Vec<BstNode> nodes;
+    int root_idx;
+}
+
+pub func bstCreate() -> BstTree {
+    return BstTree {
+        nodes: vecNew<BstNode>(),
+        root_idx: -1,
+    };
+}
+
+pub func bstInsert(tree: BstTree, key_val: int) -> BstTree {
+    let mut node_list: Vec<BstNode> = tree.nodes;
+    let new_idx = veclen<BstNode>(node_list);
+    let new_node = BstNode {
+        key: key_val,
+        left_idx: -1,
+        right_idx: -1,
+    };
+    node_list = push<BstNode>(node_list, new_node);
+
+    if (tree.root_idx == -1) {
+        return BstTree {
+            nodes: node_list,
+            root_idx: 0,
+        };
+    }
+
+    let mut current_idx: int = tree.root_idx;
+    let mut placed = false;
+
+    while (!placed) {
+        let curr = get<BstNode>(node_list, current_idx);
+        if (key_val < curr.key) {
+            if (curr.left_idx == -1) {
+                let updated = BstNode { key: curr.key, left_idx: new_idx, right_idx: curr.right_idx };
+                set<BstNode>(node_list, current_idx, updated);
+                placed = true;
+            } else {
+                current_idx = curr.left_idx;
+            }
+        } else {
+            if (curr.right_idx == -1) {
+                let updated = BstNode { key: curr.key, left_idx: curr.left_idx, right_idx: new_idx };
+                set<BstNode>(node_list, current_idx, updated);
+                placed = true;
+            } else {
+                current_idx = curr.right_idx;
+            }
+        }
+    }
+
+    return BstTree {
+        nodes: node_list,
+        root_idx: tree.root_idx,
+    };
+}
+
+pub func bstContains(tree: BstTree, target: int) -> bool {
+    if (tree.root_idx == -1) {
+        return false;
+    }
+    let mut current_idx: int = tree.root_idx;
+    while (current_idx != -1) {
+        let curr = get<BstNode>(tree.nodes, current_idx);
+        if (curr.key == target) {
+            return true;
+        } else if (target < curr.key) {
+            current_idx = curr.left_idx;
+        } else {
+            current_idx = curr.right_idx;
+        }
+    }
+    return false;
+}
+
+pub func main() -> int {
+    let mut tree = bstCreate();
+    tree = bstInsert(tree, 50);
+    tree = bstInsert(tree, 30);
+    tree = bstInsert(tree, 70);
+    tree = bstInsert(tree, 20);
+    tree = bstInsert(tree, 40);
+
+    let has_40 = bstContains(tree, 40);
+    let has_99 = bstContains(tree, 99);
+
+    if (has_40) {
+        outln("BST search for 40: FOUND");
+    } else {
+        outln("BST search for 40: NOT FOUND");
+    }
+
+    if (!has_99) {
+        outln("BST search for 99: NOT FOUND (Correct)");
+    }
+
+    return 0;
+}

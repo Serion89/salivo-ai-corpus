@@ -1,0 +1,44 @@
+module corpus.frontend.pagination;
+
+><salivo.std.core::{outln};
+
+pub struct PaginationConfig {
+    int current_page;
+    int total_pages;
+    int page_size;
+}
+
+pub func renderPageItem(page_num: int, is_active: bool) -> string {
+    if (is_active) {
+        return $"    <li class=\"page-item active\"><span class=\"page-link\">{page_num:str}</span></li>";
+    }
+    return $"    <li class=\"page-item\"><a class=\"page-link\" href=\"?page={page_num:str}\">{page_num:str}</a></li>";
+}
+
+pub func renderPagination(config: PaginationConfig) -> string {
+    let mut items = "";
+    for (let mut p = 1; p <= config.total_pages; p = p + 1) {
+        let is_curr = (p == config.current_page);
+        let item_html = renderPageItem(p, is_curr);
+        items = $"{items}\n{item_html}";
+    }
+
+    let nav_open = "<nav aria-label=\"Page navigation\">\n  <ul class=\"pagination\">";
+    let nav_close = "  </ul>\n</nav>";
+
+    return $"{nav_open}{items}\n{nav_close}";
+}
+
+pub func main() -> int {
+    let cfg = PaginationConfig {
+        current_page: 2,
+        total_pages: 5,
+        page_size: 20,
+    };
+
+    let rendered = renderPagination(cfg);
+    outln("Rendered Pagination Navigation HTML:");
+    outln(rendered);
+
+    return 0;
+}

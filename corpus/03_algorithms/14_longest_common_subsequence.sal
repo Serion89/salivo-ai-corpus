@@ -1,0 +1,63 @@
+module corpus.algorithms.lcs;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+><salivo.std.math::{max};
+
+pub func lcsLength(seq1: Vec<int>, seq2: Vec<int>) -> int {
+    let m = veclen<int>(seq1);
+    let n = veclen<int>(seq2);
+
+    let total_cells = (m + 1) * (n + 1);
+    let mut table: Vec<int> = vecNew<int>();
+    for (let mut k = 0; k < total_cells; k = k + 1) {
+        table = push<int>(table, 0);
+    }
+
+    let stride = n + 1;
+
+    for (let mut i = 1; i <= m; i = i + 1) {
+        for (let mut j = 1; j <= n; j = j + 1) {
+            let item1 = get<int>(seq1, i - 1);
+            let item2 = get<int>(seq2, j - 1);
+
+            let current_idx = i * stride + j;
+            if (item1 == item2) {
+                let diag_idx = (i - 1) * stride + (j - 1);
+                let val = get<int>(table, diag_idx) + 1;
+                set<int>(table, current_idx, val);
+            } else {
+                let top_idx = (i - 1) * stride + j;
+                let left_idx = i * stride + (j - 1);
+                let best = max(get<int>(table, top_idx), get<int>(table, left_idx));
+                set<int>(table, current_idx, best);
+            }
+        }
+    }
+
+    let final_idx = m * stride + n;
+    return get<int>(table, final_idx);
+}
+
+pub func main() -> int {
+    // Sequence A: [ 10, 20, 30, 40, 50 ]
+    let mut a: Vec<int> = vecNew<int>();
+    a = push<int>(a, 10);
+    a = push<int>(a, 20);
+    a = push<int>(a, 30);
+    a = push<int>(a, 40);
+    a = push<int>(a, 50);
+
+    // Sequence B: [ 20, 40, 50, 60 ]
+    // Common: [ 20, 40, 50 ] -> length 3
+    let mut b: Vec<int> = vecNew<int>();
+    b = push<int>(b, 20);
+    b = push<int>(b, 40);
+    b = push<int>(b, 50);
+    b = push<int>(b, 60);
+
+    let lcs_val = lcsLength(a, b);
+    outln($"Longest common subsequence length: {lcs_val:str}");
+
+    return 0;
+}

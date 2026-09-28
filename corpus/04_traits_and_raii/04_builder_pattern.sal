@@ -1,0 +1,85 @@
+module corpus.traits.builderpattern;
+
+><salivo.std.core::{outln};
+
+pub struct ServerConfig {
+    string host;
+    int port;
+    int max_connections;
+    bool enable_tls;
+    int timeout_seconds;
+}
+
+pub struct ConfigBuilder {
+    string host;
+    int port;
+    int max_connections;
+    bool enable_tls;
+    int timeout_seconds;
+}
+
+pub func builderNew() -> ConfigBuilder {
+    return ConfigBuilder {
+        host: "127.0.0.1",
+        port: 8080,
+        max_connections: 100,
+        enable_tls: false,
+        timeout_seconds: 30,
+    };
+}
+
+pub func withHost(b: ConfigBuilder, h: string) -> ConfigBuilder {
+    return ConfigBuilder {
+        host: h,
+        port: b.port,
+        max_connections: b.max_connections,
+        enable_tls: b.enable_tls,
+        timeout_seconds: b.timeout_seconds,
+    };
+}
+
+pub func withPort(b: ConfigBuilder, p: int) -> ConfigBuilder {
+    return ConfigBuilder {
+        host: b.host,
+        port: p,
+        max_connections: b.max_connections,
+        enable_tls: b.enable_tls,
+        timeout_seconds: b.timeout_seconds,
+    };
+}
+
+pub func withTls(b: ConfigBuilder, tls: bool) -> ConfigBuilder {
+    return ConfigBuilder {
+        host: b.host,
+        port: b.port,
+        max_connections: b.max_connections,
+        enable_tls: tls,
+        timeout_seconds: b.timeout_seconds,
+    };
+}
+
+pub func buildConfig(b: ConfigBuilder) -> ServerConfig {
+    return ServerConfig {
+        host: b.host,
+        port: b.port,
+        max_connections: b.max_connections,
+        enable_tls: b.enable_tls,
+        timeout_seconds: b.timeout_seconds,
+    };
+}
+
+pub func main() -> int {
+    let mut b = builderNew();
+    b = withHost(b, "0.0.0.0");
+    b = withPort(b, 443);
+    b = withTls(b, true);
+
+    let config = buildConfig(b);
+
+    outln($"Server Host:    {config.host}");
+    outln($"Server Port:    {config.port:str}");
+    outln($"Max Conns:      {config.max_connections:str}");
+    outln($"Timeout Secs:   {config.timeout_seconds:str}");
+
+    return 0;
+}

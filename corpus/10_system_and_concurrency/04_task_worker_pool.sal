@@ -1,0 +1,53 @@
+module corpus.system.workerpool;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct Task {
+    int id;
+    string job_name;
+    int payload_cost;
+}
+
+pub struct WorkerPool {
+    int worker_count;
+    Vec<Task> queue;
+}
+
+pub func poolCreate(workers: int) -> WorkerPool {
+    return WorkerPool {
+        worker_count: workers,
+        queue: vecNew<Task>(),
+    };
+}
+
+pub func poolSubmit(pool: WorkerPool, t: Task) -> WorkerPool {
+    let mut updated_queue: Vec<Task> = pool.queue;
+    updated_queue = push<Task>(updated_queue, t);
+    return WorkerPool {
+        worker_count: pool.worker_count,
+        queue: updated_queue,
+    };
+}
+
+pub func poolDrain(pool: WorkerPool) {
+    let count = veclen<Task>(pool.queue);
+    for (let mut i = 0; i < count; i = i + 1) {
+        let current_task = get<Task>(pool.queue, i);
+        let assigned_worker = i % pool.worker_count;
+        outln($"[Worker #{assigned_worker:str}] Processing Task #{current_task.id:str}: '{current_task.job_name}' (Cost: {current_task.payload_cost:str})");
+    }
+}
+
+pub func main() -> int {
+    let mut pool = poolCreate(2); // 2 workers
+    pool = poolSubmit(pool, Task { id: 1, job_name: "IndexSearchCorpus", payload_cost: 45 });
+    pool = poolSubmit(pool, Task { id: 2, job_name: "ComputeSftLoss", payload_cost: 120 });
+    pool = poolSubmit(pool, Task { id: 3, job_name: "SyncGitRemote", payload_cost: 15 });
+    pool = poolSubmit(pool, Task { id: 4, job_name: "CleanArtifactCache", payload_cost: 10 });
+
+    outln("Dispatching queued tasks to worker pool:");
+    poolDrain(pool);
+
+    return 0;
+}

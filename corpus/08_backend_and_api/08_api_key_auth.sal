@@ -1,0 +1,39 @@
+module corpus.backend.apikeyauth;
+
+><salivo.std.core::{outln};
+
+pub struct ApiKeyRecord {
+    string key_hash;
+    string client_id;
+    bool can_read;
+    bool can_write;
+    bool is_revoked;
+}
+
+pub func evaluateAccess(key: ApiKeyRecord, requires_write: bool) -> int {
+    if (key.is_revoked) {
+        return 401; // Key Revoked
+    }
+    if (requires_write && !key.can_write) {
+        return 403; // Forbidden: Read-Only Key
+    }
+    return 200; // Authorized
+}
+
+pub func main() -> int {
+    let read_only_key = ApiKeyRecord {
+        key_hash: "hash_key_ro_123",
+        client_id: "client_analytics_service",
+        can_read: true,
+        can_write: false,
+        is_revoked: false,
+    };
+
+    let read_check = evaluateAccess(read_only_key, false);
+    let write_check = evaluateAccess(read_only_key, true);
+
+    outln($"Read operation on Read-Only Key:  Status {read_check:str}");
+    outln($"Write operation on Read-Only Key: Status {write_check:str}");
+
+    return 0;
+}

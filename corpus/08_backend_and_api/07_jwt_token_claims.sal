@@ -1,0 +1,49 @@
+module corpus.backend.jwtclaims;
+
+><salivo.std.core::{outln};
+
+pub struct JwtClaims {
+    string issuer;
+    string subject;
+    string role;
+    int issued_at;
+    int expires_at;
+}
+
+pub func isTokenExpired(claims: JwtClaims, current_time: int) -> bool {
+    return current_time >= claims.expires_at;
+}
+
+pub func hasRequiredRole(claims: JwtClaims, required_role: string) -> bool {
+    return claims.role == required_role;
+}
+
+pub func validateClaims(claims: JwtClaims, current_time: int, required_role: string) -> int {
+    if (isTokenExpired(claims, current_time)) {
+        return 401; // Unauthorized: Token Expired
+    }
+    if (!hasRequiredRole(claims, required_role)) {
+        return 403; // Forbidden: Insufficient Role Permissions
+    }
+    return 200; // Success
+}
+
+pub func main() -> int {
+    let active_claims = JwtClaims {
+        issuer: "https://auth.salivo.internal",
+        subject: "usr_99812",
+        role: "admin",
+        issued_at: 1700000000,
+        expires_at: 1700003600,
+    };
+
+    let check1 = validateClaims(active_claims, 1700001000, "admin");
+    let check2 = validateClaims(active_claims, 1700001000, "superadmin");
+    let check3 = validateClaims(active_claims, 1700005000, "admin");
+
+    outln($"Valid Admin Request:   Status {check1:str}");
+    outln($"Unauthorized Role:      Status {check2:str}");
+    outln($"Expired Token Request:  Status {check3:str}");
+
+    return 0;
+}
