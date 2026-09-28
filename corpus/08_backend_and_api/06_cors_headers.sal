@@ -1,0 +1,45 @@
+module corpus.backend.corsheaders;
+
+><salivo.std.core::{outln};
+
+pub struct CorsPolicy {
+    string allowed_origin;
+    string allowed_methods;
+    string allowed_headers;
+    bool allow_credentials;
+    int max_age_seconds;
+}
+
+pub func defaultCorsPolicy() -> CorsPolicy {
+    return CorsPolicy {
+        allowed_origin: "https://app.salivo-enterprise.io",
+        allowed_methods: "GET, POST, PUT, DELETE, OPTIONS",
+        allowed_headers: "Content-Type, Authorization, X-Requested-With",
+        allow_credentials: true,
+        max_age_seconds: 86400,
+    };
+}
+
+pub func generateCorsHeaderStrings(policy: CorsPolicy) -> string {
+    let h1 = $"Access-Control-Allow-Origin: {policy.allowed_origin}";
+    let h2 = $"Access-Control-Allow-Methods: {policy.allowed_methods}";
+    let h3 = $"Access-Control-Allow-Headers: {policy.allowed_headers}";
+    let h4 = $"Access-Control-Max-Age: {policy.max_age_seconds:str}";
+
+    let mut h5 = "Access-Control-Allow-Credentials: false";
+    if (policy.allow_credentials) {
+        h5 = "Access-Control-Allow-Credentials: true";
+    }
+
+    return $"{h1}\n{h2}\n{h3}\n{h4}\n{h5}";
+}
+
+pub func main() -> int {
+    let policy = defaultCorsPolicy();
+    let headers_block = generateCorsHeaderStrings(policy);
+
+    outln("Computed Preflight CORS Headers:");
+    outln(headers_block);
+
+    return 0;
+}

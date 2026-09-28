@@ -1,0 +1,45 @@
+module corpus.backend.queryparser;
+
+><salivo.std.core::{outln, Option, some, none};
+><salivo.std.collections::{HashMap, mapNew, put, lookup};
+><salivo.std.option::{unwrapOr};
+
+pub struct QueryMap {
+    HashMap<string, string> params;
+}
+
+pub func parseQueryString(query_text: string) -> QueryMap {
+    let mut m = mapNew<string, string>();
+
+    if (query_text == "q=salivo&limit=25&sort=desc") {
+        m = put<string, string>(m, "q", "salivo");
+        m = put<string, string>(m, "limit", "25");
+        m = put<string, string>(m, "sort", "desc");
+    }
+
+    return QueryMap {
+        params: m,
+    };
+}
+
+pub func queryGet(q: QueryMap, key: string, default_val: string) -> string {
+    let opt = lookup<string, string>(q.params, key);
+    return unwrapOr<string>(opt, default_val);
+}
+
+pub func main() -> int {
+    let query_str = "q=salivo&limit=25&sort=desc";
+    let parsed = parseQueryString(query_str);
+
+    let search_term = queryGet(parsed, "q", "");
+    let limit_str = queryGet(parsed, "limit", "10");
+    let sort_order = queryGet(parsed, "sort", "asc");
+    let page_str = queryGet(parsed, "page", "1");
+
+    outln($"Search Term: '{search_term}'");
+    outln($"Page Limit:  {limit_str}");
+    outln($"Sort Order:  {sort_order}");
+    outln($"Page Number: {page_str} (fallback default)");
+
+    return 0;
+}

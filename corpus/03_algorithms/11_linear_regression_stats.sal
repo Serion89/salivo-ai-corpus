@@ -1,0 +1,64 @@
+module corpus.algorithms.statistics;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct SummaryStats {
+    int count;
+    int sum;
+    int min_val;
+    int max_val;
+    int mean;
+}
+
+pub func computeStats(numbers: Vec<int>) -> SummaryStats {
+    let n = veclen<int>(numbers);
+    if (n == 0) {
+        return SummaryStats { count: 0, sum: 0, min_val: 0, max_val: 0, mean: 0 };
+    }
+
+    let first = get<int>(numbers, 0);
+    let mut total: int = first;
+    let mut current_min: int = first;
+    let mut current_max: int = first;
+
+    for (let mut i = 1; i < n; i = i + 1) {
+        let val = get<int>(numbers, i);
+        total = total + val;
+        if (val < current_min) {
+            current_min = val;
+        }
+        if (val > current_max) {
+            current_max = val;
+        }
+    }
+
+    let average = total / n;
+    return SummaryStats {
+        count: n,
+        sum: total,
+        min_val: current_min,
+        max_val: current_max,
+        mean: average,
+    };
+}
+
+pub func main() -> int {
+    let mut dataset: Vec<int> = vecNew<int>();
+    dataset = push<int>(dataset, 12);
+    dataset = push<int>(dataset, 45);
+    dataset = push<int>(dataset, 67);
+    dataset = push<int>(dataset, 23);
+    dataset = push<int>(dataset, 89);
+    dataset = push<int>(dataset, 34);
+
+    let stats = computeStats(dataset);
+
+    outln($"Sample Count: {stats.count:str}");
+    outln($"Sum Total:    {stats.sum:str}");
+    outln($"Min Value:    {stats.min_val:str}");
+    outln($"Max Value:    {stats.max_val:str}");
+    outln($"Mean Average: {stats.mean:str}");
+
+    return 0;
+}

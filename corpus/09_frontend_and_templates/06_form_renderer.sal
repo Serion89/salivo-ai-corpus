@@ -1,0 +1,57 @@
+module corpus.frontend.formrenderer;
+
+><salivo.std.core::{outln};
+
+pub struct FormField {
+    string id;
+    string label;
+    string input_type;
+    string value;
+    string error_message;
+    bool has_error;
+}
+
+pub func renderField(field: FormField) -> string {
+    let label_html = $"  <label for=\"{field.id}\" class=\"form-label\">{field.label}</label>";
+
+    let mut input_html = $"  <input type=\"{field.input_type}\" id=\"{field.id}\" name=\"{field.id}\" value=\"{field.value}\" class=\"form-input\" />";
+    if (field.has_error) {
+        input_html = $"  <input type=\"{field.input_type}\" id=\"{field.id}\" name=\"{field.id}\" value=\"{field.value}\" class=\"form-input input-invalid\" />";
+    }
+
+    let mut err_html = "";
+    if (field.has_error) {
+        err_html = $"\n  <span class=\"error-feedback\">{field.error_message}</span>";
+    }
+
+    return $"<div class=\"form-group\">\n{label_html}\n{input_html}{err_html}\n</div>";
+}
+
+pub func main() -> int {
+    let email_field = FormField {
+        id: "email",
+        label: "Email Address",
+        input_type: "email",
+        value: "user@invalid",
+        error_message: "Please enter a valid business email address.",
+        has_error: true,
+    };
+
+    let password_field = FormField {
+        id: "password",
+        label: "Password",
+        input_type: "password",
+        value: "",
+        error_message: "",
+        has_error: false,
+    };
+
+    let f1 = renderField(email_field);
+    let f2 = renderField(password_field);
+
+    outln("Rendered Form Fields:");
+    outln(f1);
+    outln(f2);
+
+    return 0;
+}

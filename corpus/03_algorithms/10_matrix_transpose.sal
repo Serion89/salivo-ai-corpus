@@ -1,0 +1,68 @@
+module corpus.algorithms.matrixtranspose;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct Matrix {
+    int rows;
+    int cols;
+    Vec<int> data;
+}
+
+pub func matrixGet(m: Matrix, r: int, c: int) -> int {
+    let index = r * m.cols + c;
+    return get<int>(m.data, index);
+}
+
+pub func matrixTranspose(m: Matrix) -> Matrix {
+    let mut transposed_data: Vec<int> = vecNew<int>();
+    let total_elements = m.rows * m.cols;
+
+    for (let mut i = 0; i < total_elements; i = i + 1) {
+        transposed_data = push<int>(transposed_data, 0);
+    }
+
+    for (let mut r = 0; r < m.rows; r = r + 1) {
+        for (let mut c = 0; c < m.cols; c = c + 1) {
+            let val = matrixGet(m, r, c);
+            let dest_index = c * m.rows + r;
+            set<int>(transposed_data, dest_index, val);
+        }
+    }
+
+    return Matrix {
+        rows: m.cols,
+        cols: m.rows,
+        data: transposed_data,
+    };
+}
+
+pub func main() -> int {
+    // 2 rows, 3 cols:
+    // [ 1, 2, 3 ]
+    // [ 4, 5, 6 ]
+    let mut initial_data: Vec<int> = vecNew<int>();
+    initial_data = push<int>(initial_data, 1);
+    initial_data = push<int>(initial_data, 2);
+    initial_data = push<int>(initial_data, 3);
+    initial_data = push<int>(initial_data, 4);
+    initial_data = push<int>(initial_data, 5);
+    initial_data = push<int>(initial_data, 6);
+
+    let mat = Matrix {
+        rows: 2,
+        cols: 3,
+        data: initial_data,
+    };
+
+    let transposed = matrixTranspose(mat);
+    outln($"Transposed dimensions: {transposed.rows:str} rows x {transposed.cols:str} cols");
+
+    for (let mut r = 0; r < transposed.rows; r = r + 1) {
+        let v0 = matrixGet(transposed, r, 0);
+        let v1 = matrixGet(transposed, r, 1);
+        outln($"Row {r:str}: [ {v0:str}, {v1:str} ]");
+    }
+
+    return 0;
+}

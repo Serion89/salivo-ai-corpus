@@ -1,0 +1,38 @@
+module corpus.frontend.modaldialog;
+
+><salivo.std.core::{outln};
+
+pub struct ModalProps {
+    string id;
+    string title;
+    string body_message;
+    string confirm_text;
+    string cancel_text;
+}
+
+pub func renderModal(props: ModalProps) -> string {
+    let backdrop = $"<div id=\"{props.id}\" class=\"modal-backdrop\" role=\"dialog\" aria-modal=\"true\">";
+    let modal_box = "  <div class=\"modal-container\">";
+    let modal_header = $"    <div class=\"modal-header\"><h3>{props.title}</h3></div>";
+    let modal_body = $"    <div class=\"modal-body\"><p>{props.body_message}</p></div>";
+    let modal_footer = $"    <div class=\"modal-footer\">\n      <button class=\"btn btn-secondary\">{props.cancel_text}</button>\n      <button class=\"btn btn-danger\">{props.confirm_text}</button>\n    </div>";
+    let closing = "  </div>\n</div>";
+
+    return $"{backdrop}\n{modal_box}\n{modal_header}\n{modal_body}\n{modal_footer}\n{closing}";
+}
+
+pub func main() -> int {
+    let delete_modal = ModalProps {
+        id: "delete-confirm-dialog",
+        title: "Confirm Deletion",
+        body_message: "Are you sure you want to permanently delete this project record? This action cannot be reversed.",
+        confirm_text: "Delete Forever",
+        cancel_text: "Cancel",
+    };
+
+    let rendered = renderModal(delete_modal);
+    outln("Rendered Modal Dialog DOM:");
+    outln(rendered);
+
+    return 0;
+}

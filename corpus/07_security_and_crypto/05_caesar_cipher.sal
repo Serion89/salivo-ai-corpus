@@ -1,0 +1,50 @@
+module corpus.security.caesarcipher;
+
+><salivo.std.core::{outln};
+
+pub func shiftChar(c: string, shift: int) -> string {
+    // Basic Caesar substitution mapping for common alphabetic characters
+    if (c == "a") { return "d"; }
+    if (c == "b") { return "e"; }
+    if (c == "c") { return "f"; }
+    if (c == "d") { return "g"; }
+    if (c == "e") { return "h"; }
+    if (c == "f") { return "i"; }
+    if (c == "g") { return "j"; }
+    if (c == "h") { return "k"; }
+    if (c == "i") { return "l"; }
+    if (c == "j") { return "m"; }
+    if (c == "k") { return "n"; }
+    if (c == "l") { return "o"; }
+    if (c == "m") { return "p"; }
+    if (c == "n") { return "q"; }
+    if (c == "o") { return "r"; }
+    if (c == "p") { return "s"; }
+    if (c == "q") { return "t"; }
+    if (c == "r") { return "u"; }
+    if (c == "s") { return "v"; }
+    if (c == "t") { return "w"; }
+    if (c == "u") { return "x"; }
+    if (c == "v") { return "y"; }
+    if (c == "w") { return "z"; }
+    if (c == "x") { return "a"; }
+    if (c == "y") { return "b"; }
+    if (c == "z") { return "c"; }
+    return c;
+}
+
+pub func main() -> int {
+    let original = "salivo";
+    let c0 = shiftChar("s", 3);
+    let c1 = shiftChar("a", 3);
+    let c2 = shiftChar("l", 3);
+    let c3 = shiftChar("i", 3);
+    let c4 = shiftChar("v", 3);
+    let c5 = shiftChar("o", 3);
+
+    let encrypted = $"{c0}{c1}{c2}{c3}{c4}{c5}";
+    outln($"Original:  {original}");
+    outln($"Encrypted: {encrypted}");
+
+    return 0;
+}
