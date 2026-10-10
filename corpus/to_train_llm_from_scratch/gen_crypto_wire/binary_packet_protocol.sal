@@ -1,0 +1,39 @@
+module corpus.crypto.packet;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct PacketHeader {
+    int magic;
+    int opcode;
+    int payloadLen;
+}
+
+pub struct Packet {
+    PacketHeader header;
+    Vec<int> payload;
+}
+
+pub func encodePacket(pkt: Packet) -> Vec<int> {
+    let mut bytes: Vec<int> = vecNew<int>();
+    bytes = push<int>(bytes, pkt.header.magic);
+    bytes = push<int>(bytes, pkt.header.opcode);
+    bytes = push<int>(bytes, pkt.header.payloadLen);
+    let n = veclen<int>(pkt.payload);
+    for (let mut i = 0; i < n; i = i + 1) {
+        bytes = push<int>(bytes, get<int>(pkt.payload, i));
+    }
+    return bytes;
+}
+
+pub func main() -> int {
+    let mut body: Vec<int> = vecNew<int>();
+    body = push<int>(body, 1);
+    body = push<int>(body, 2);
+    let hdr = PacketHeader { magic: 51966, opcode: 10, payloadLen: 2 };
+    let pkt = Packet { header: hdr, payload: body };
+    let wire = encodePacket(pkt);
+    let l = veclen<int>(wire);
+    outln($"Serialized binary wire frame: {l:str} bytes.");
+    return 0;
+}

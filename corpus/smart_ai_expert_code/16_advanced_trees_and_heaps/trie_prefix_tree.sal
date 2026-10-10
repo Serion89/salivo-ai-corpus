@@ -1,0 +1,60 @@
+module corpus.dsa.trie;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct TrieNode {
+    Vec<int> children;
+    int isTerminal;
+}
+
+pub func createNode() -> TrieNode {
+    let mut ch: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 26; i = i + 1) {
+        ch = push<int>(ch, -1);
+    }
+    return TrieNode { children: ch, isTerminal: 0 };
+}
+
+pub struct Trie {
+    Vec<TrieNode> nodes;
+}
+
+pub func trieNew() -> Trie {
+    let mut n: Vec<TrieNode> = vecNew<TrieNode>();
+    n = push<TrieNode>(n, createNode());
+    return Trie { nodes: n };
+}
+
+pub func trieInsert(trie: Trie, word: Vec<int>) {
+    let mut curr = 0;
+    let len = veclen<int>(word);
+    for (let mut i = 0; i < len; i = i + 1) {
+        let chCode = get<int>(word, i);
+        let charIdx = chCode - 97;
+        let mut currNode = get<TrieNode>(trie.nodes, curr);
+        let nextIdx = get<int>(currNode.children, charIdx);
+        if (nextIdx < 0) {
+            let newNodeIdx = veclen<TrieNode>(trie.nodes);
+            trie.nodes = push<TrieNode>(trie.nodes, createNode());
+            set<int>(currNode.children, charIdx, newNodeIdx);
+            curr = newNodeIdx;
+        } else {
+            curr = nextIdx;
+        }
+    }
+    let mut lastNode = get<TrieNode>(trie.nodes, curr);
+    lastNode.isTerminal = 1;
+}
+
+pub func main() -> int {
+    let t = trieNew();
+    let mut word: Vec<int> = vecNew<int>();
+    word = push<int>(word, 97); // 'a'
+    word = push<int>(word, 112); // 'p'
+    word = push<int>(word, 112); // 'p'
+    trieInsert(t, word);
+    let totalNodes = veclen<TrieNode>(t.nodes);
+    outln($"Trie node count: {totalNodes:str}");
+    return 0;
+}

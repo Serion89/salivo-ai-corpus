@@ -1,0 +1,49 @@
+module corpus.graphs.kruskal;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct MstEdge {
+    int u;
+    int v;
+    int weight;
+}
+
+pub func findRoot(parent: Vec<int>, i: int) -> int {
+    let p = get<int>(parent, i);
+    if (p == i) {
+        return i;
+    }
+    let root = findRoot(parent, p);
+    set<int>(parent, i, root);
+    return root;
+}
+
+pub func kruskalWeight(edges: Vec<MstEdge>, numVertices: int) -> int {
+    let mut parent: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < numVertices; i = i + 1) {
+        parent = push<int>(parent, i);
+    }
+    let mut totalWeight = 0;
+    let numEdges = veclen<MstEdge>(edges);
+    for (let mut e = 0; e < numEdges; e = e + 1) {
+        let edge = get<MstEdge>(edges, e);
+        let rootU = findRoot(parent, edge.u);
+        let rootV = findRoot(parent, edge.v);
+        if (rootU != rootV) {
+            totalWeight = totalWeight + edge.weight;
+            set<int>(parent, rootU, rootV);
+        }
+    }
+    return totalWeight;
+}
+
+pub func main() -> int {
+    let mut edges: Vec<MstEdge> = vecNew<MstEdge>();
+    edges = push<MstEdge>(edges, MstEdge { u: 0, v: 1, weight: 1 });
+    edges = push<MstEdge>(edges, MstEdge { u: 1, v: 2, weight: 2 });
+    edges = push<MstEdge>(edges, MstEdge { u: 0, v: 2, weight: 3 });
+    let mst = kruskalWeight(edges, 3);
+    outln($"Kruskal MST Total Weight: {mst:str}");
+    return 0;
+}

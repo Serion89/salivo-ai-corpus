@@ -1,0 +1,29 @@
+module corpus.systems.buffer;
+
+><salivo.std.core::{outln, Drop};
+><salivo.std.mem::{allocate, deallocate};
+
+pub struct ByteRingBuffer {
+    int bufferPtr;
+    int capacity;
+    int head;
+    int tail;
+}
+
+pub func byteRingNew(capacity: int) -> ByteRingBuffer {
+    let ptr = allocate(capacity, 8);
+    return ByteRingBuffer { bufferPtr: ptr, capacity: capacity, head: 0, tail: 0 };
+}
+
+impl Drop for ByteRingBuffer {
+    func drop(self) {
+        deallocate(self.bufferPtr, self.capacity, 8);
+        outln("[ByteRing] Deallocated raw memory buffer via RAII Drop.");
+    }
+}
+
+pub func main() -> int {
+    let rb = byteRingNew(256);
+    outln($"Raw Byte Ring Buffer allocated: capacity={rb.capacity:str}");
+    return 0;
+}

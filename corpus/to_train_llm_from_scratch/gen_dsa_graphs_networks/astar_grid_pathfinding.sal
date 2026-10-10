@@ -1,0 +1,25 @@
+module corpus.graphs.astar;
+
+><salivo.std.core::{outln};
+
+pub func absVal(x: int) -> int {
+    if (x < 0) {
+        return -x;
+    }
+    return x;
+}
+
+pub func manhattanDistance(x1: int, y1: int, x2: int, y2: int) -> int {
+    return absVal(x1 - x2) + absVal(y1 - y2);
+}
+
+pub func astarStep(curX: int, curY: int, targetX: int, targetY: int) -> int {
+    let h = manhattanDistance(curX, curY, targetX, targetY);
+    return h;
+}
+
+pub func main() -> int {
+    let h = astarStep(1, 1, 5, 5);
+    outln($"A* Manhattan Heuristic from (1,1) to (5,5): {h:str}");
+    return 0;
+}

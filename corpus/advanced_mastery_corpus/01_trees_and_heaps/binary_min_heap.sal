@@ -1,0 +1,45 @@
+module corpus.dsa.minheap;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct MinHeap {
+    Vec<int> data;
+}
+
+pub func heapNew() -> MinHeap {
+    return MinHeap { data: vecNew<int>() };
+}
+
+pub func heapPush(heap: MinHeap, val: int) {
+    let mut v = heap.data;
+    v = push<int>(v, val);
+    let mut idx = veclen<int>(v) - 1;
+    while (idx > 0) {
+        let parent = (idx - 1) / 2;
+        let parentVal = get<int>(v, parent);
+        let currVal = get<int>(v, idx);
+        if (currVal < parentVal) {
+            set<int>(v, parent, currVal);
+            set<int>(v, idx, parentVal);
+            idx = parent;
+        } else {
+            return;
+        }
+    }
+}
+
+pub func heapPeek(heap: MinHeap) -> int {
+    return get<int>(heap.data, 0);
+}
+
+pub func main() -> int {
+    let h = heapNew();
+    heapPush(h, 45);
+    heapPush(h, 12);
+    heapPush(h, 89);
+    heapPush(h, 5);
+    let top = heapPeek(h);
+    outln($"Min Heap Top: {top:str}");
+    return 0;
+}

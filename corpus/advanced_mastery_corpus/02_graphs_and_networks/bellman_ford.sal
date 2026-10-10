@@ -1,0 +1,46 @@
+module corpus.graphs.bellmanford;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct Edge {
+    int u;
+    int v;
+    int weight;
+}
+
+pub func bellmanFord(edges: Vec<Edge>, numVertices: int, src: int) -> Vec<int> {
+    let mut dist: Vec<int> = vecNew<int>();
+    let inf = 999999;
+    for (let mut i = 0; i < numVertices; i = i + 1) {
+        dist = push<int>(dist, inf);
+    }
+    set<int>(dist, src, 0);
+    let numEdges = veclen<Edge>(edges);
+
+    for (let mut step = 0; step < numVertices - 1; step = step + 1) {
+        for (let mut e = 0; e < numEdges; e = e + 1) {
+            let edge = get<Edge>(edges, e);
+            let uDist = get<int>(dist, edge.u);
+            if (uDist < inf) {
+                let vDist = get<int>(dist, edge.v);
+                let cand = uDist + edge.weight;
+                if (cand < vDist) {
+                    set<int>(dist, edge.v, cand);
+                }
+            }
+        }
+    }
+    return dist;
+}
+
+pub func main() -> int {
+    let mut edges: Vec<Edge> = vecNew<Edge>();
+    edges = push<Edge>(edges, Edge { u: 0, v: 1, weight: 4 });
+    edges = push<Edge>(edges, Edge { u: 0, v: 2, weight: 5 });
+    edges = push<Edge>(edges, Edge { u: 1, v: 2, weight: -2 });
+    let dist = bellmanFord(edges, 3, 0);
+    let d = get<int>(dist, 2);
+    outln($"Bellman-Ford dist to 2: {d:str}");
+    return 0;
+}

@@ -1,0 +1,41 @@
+module corpus.dp.kadane;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func kadaneMaxSum(arr: Vec<int>) -> int {
+    let n = veclen<int>(arr);
+    if (n == 0) {
+        return 0;
+    }
+    let mut maxSoFar = get<int>(arr, 0);
+    let mut currentMax = get<int>(arr, 0);
+    for (let mut i = 1; i < n; i = i + 1) {
+        let x = get<int>(arr, i);
+        if (x > currentMax + x) {
+            currentMax = x;
+        } else {
+            currentMax = currentMax + x;
+        }
+        if (currentMax > maxSoFar) {
+            maxSoFar = currentMax;
+        }
+    }
+    return maxSoFar;
+}
+
+pub func main() -> int {
+    let mut a: Vec<int> = vecNew<int>();
+    a = push<int>(a, -2);
+    a = push<int>(a, 1);
+    a = push<int>(a, -3);
+    a = push<int>(a, 4);
+    a = push<int>(a, -1);
+    a = push<int>(a, 2);
+    a = push<int>(a, 1);
+    a = push<int>(a, -5);
+    a = push<int>(a, 4);
+    let res = kadaneMaxSum(a);
+    outln($"Maximum Subarray Sum: {res:str}");
+    return 0;
+}

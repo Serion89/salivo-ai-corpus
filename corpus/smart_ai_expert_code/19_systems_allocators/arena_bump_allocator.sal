@@ -1,0 +1,50 @@
+module corpus.systems.arena;
+
+><salivo.std.core::{outln, Drop};
+><salivo.std.mem::{allocate, deallocate};
+
+pub struct ArenaAllocator {
+    int memoryPtr;
+    int capacityBytes;
+    int offsetBytes;
+}
+
+pub func arenaCreate(capacity: int) -> ArenaAllocator {
+    let ptr = allocate(capacity, 8);
+    return ArenaAllocator {
+        memoryPtr: ptr,
+        capacityBytes: capacity,
+        offsetBytes: 0,
+    };
+}
+
+pub func arenaAlloc(arena: ArenaAllocator, sizeBytes: int) -> int {
+    let alignedSize = (sizeBytes + 7) & (-8);
+    if (arena.offsetBytes + alignedSize > arena.capacityBytes) {
+        return 0;
+    }
+    let resultAddr = arena.memoryPtr + arena.offsetBytes;
+    arena.offsetBytes = arena.offsetBytes + alignedSize;
+    return resultAddr;
+}
+
+pub func arenaReset(arena: ArenaAllocator) {
+    arena.offsetBytes = 0;
+}
+
+impl Drop for ArenaAllocator {
+    func drop(self) {
+        deallocate(self.memoryPtr, self.capacityBytes, 8);
+        outln("[Arena] Released arena backing pool safely via RAII.");
+    }
+}
+
+pub func main() -> int {
+    let mut arena = arenaCreate(1024);
+    let p1 = arenaAlloc(arena, 64);
+    let p2 = arenaAlloc(arena, 128);
+    outln($"Arena allocated offset: {arena.offsetBytes:str} bytes.");
+    arenaReset(arena);
+    outln("Arena reset to zero offset without free-overhead.");
+    return 0;
+}

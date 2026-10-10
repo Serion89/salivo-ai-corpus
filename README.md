@@ -41,12 +41,24 @@ salivo-ai-corpus/
 │   │   ├── 12_project_minidb_engine/   # In-memory SQL/KV table storage, query filter, WAL transactions
 │   │   ├── 13_project_http_web_framework/ # HTTP parser, route table, middleware stack, REST controller
 │   │   ├── 14_project_chess_game_engine/  # 8x8 Board state, ray move generator, material evaluator, game runner
-│   │   └── 15_project_crypto_wire_protocol/ # Frame codec, CRC16 checksum, HMAC auth, secure session state
+│   │   ├── 15_project_crypto_wire_protocol/ # Frame codec, CRC16 checksum, HMAC auth, secure session state
+│   │   ├── 16_advanced_trees_and_heaps/   # AVL, Segment Tree, Fenwick Tree, Min/Max-Heap, Trie, DSU, LRU, Ring Buffer
+│   │   ├── 17_graph_algorithms/           # Dijkstra, BFS, Kahn Toposort, Floyd-Warshall, Bellman-Ford, Kruskal, A*
+│   │   ├── 18_dynamic_programming/        # LIS O(N log N), Matrix Chain Mult, Bitmask TSP, Coin Change, LPS, Kadane
+│   │   ├── 19_systems_allocators/         # Linear Arena/Bump, Slab/Pool Allocators, RAII Drop buffers, Bitboard, Bloom
+│   │   ├── 20_parsers_and_strings/        # KMP, Rabin-Karp, Recursive Descent AST Parser, JSON Tokenizer, Huffman
+│   │   └── 21_wire_protocols_and_crypto/  # FNV-1a, CRC32 Checksum, Binary Packet Frame Serializer, HTTP Parser
 │   │
-│   └── to_train_llm_from_scratch/      # 30,000 files for vocabulary & syntax pre-training
+│   └── to_train_llm_from_scratch/      # 30,000+ files for vocabulary & syntax pre-training
 │       ├── gen_dsa_sorting/            # 3,000 verified sorting algorithm variations
 │       ├── gen_dsa_searching/          # 2,000 verified binary & linear search variations
 │       ├── gen_dsa_dp/                 # 4,000 verified DP variations (Knapsack, LCS, Sieve, Fib)
+│       ├── gen_dsa_trees_heaps/        # Verified AVL, Segment Tree, Fenwick, Heaps, Trie, DSU, LRU
+│       ├── gen_dsa_graphs_networks/    # Verified Dijkstra, BFS, Toposort, Floyd-Warshall, Bellman-Ford, Kruskal, A*
+│       ├── gen_dsa_advanced_dp/        # Verified LIS, Matrix Chain, Bitmask TSP, Coin Change, LPS, Kadane
+│       ├── gen_systems_allocators/     # Verified Arena Allocator, Slab Allocator, RAII Buffers, Bitboard, Bloom
+│       ├── gen_strings_parsers/        # Verified KMP, Rabin-Karp, Recursive Descent AST, JSON Tokenizer, Huffman
+│       ├── gen_crypto_wire/            # Verified FNV-1a, CRC32, Packet Serializer, HTTP Request Parser
 │       ├── gen_dsa_math/               # 1,000 verified 2D matrix transformation modules
 │       ├── gen_math_algebra/           # 2,000 verified GCD, LCM, and fast modular power modules
 │       ├── gen_math_stats/             # 1,000 verified mean, min/max, and statistical modules
@@ -60,11 +72,14 @@ salivo-ai-corpus/
 ├── scripts/
 │   ├── verify_all.py                   # Automated Stage-3 compiler verification runner
 │   ├── build_dataset.py                # Exports pretraining, FIM, and SFT datasets (.jsonl)
-│   └── build_30k_corpus.py             # High-throughput 30k parallel synthesis & verification engine
+│   ├── build_30k_corpus.py             # High-throughput 30k parallel synthesis & verification engine
+│   ├── build_advanced_mastery_corpus.py # Advanced DSA & Systems compiler verification suite
+│   └── generate_advanced_dsa_sft.py    # Teacher-level SFT dataset synthesis engine
 │
 ├── datasets/                           # Exported JSONL training data
+│   ├── cieri_advanced_dsa_sft.jsonl    # Teacher-level CoT SFT pairs for DSA, systems & allocators
 │   ├── smart_ai_expert_sft.jsonl       # High-entropy dataset for fine-tuning existing smart models
-│   ├── pretrain_corpus.jsonl           # 30,060 raw files for pre-training from scratch
+│   ├── pretrain_corpus.jsonl           # 30,060+ raw files for pre-training from scratch
 │   ├── fim_part1.jsonl                 # IDE ghost-text code completion (Part 1)
 │   ├── fim_part2.jsonl                 # IDE ghost-text code completion (Part 2)
 │   └── instruct_sft.jsonl              # Full instruction-tuning dataset

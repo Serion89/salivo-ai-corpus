@@ -1,0 +1,36 @@
+module corpus.crypto.crc32;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func crc32Byte(crc: int, b: int) -> int {
+    let mut c = crc ^ b;
+    for (let mut k = 0; k < 8; k = k + 1) {
+        if ((c & 1) != 0) {
+            c = (c >> 1) ^ 3988292384;
+        } else {
+            c = c >> 1;
+        }
+    }
+    return c;
+}
+
+pub func crc32(data: Vec<int>) -> int {
+    let mut crc = -1; // 0xFFFFFFFF
+    let n = veclen<int>(data);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let b = get<int>(data, i);
+        crc = crc32Byte(crc, b);
+    }
+    return crc ^ (-1);
+}
+
+pub func main() -> int {
+    let mut d: Vec<int> = vecNew<int>();
+    d = push<int>(d, 49); // '1'
+    d = push<int>(d, 50); // '2'
+    d = push<int>(d, 51); // '3'
+    let checksum = crc32(d);
+    outln($"CRC32 Checksum of '123': {checksum:str}");
+    return 0;
+}

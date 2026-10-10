@@ -1,0 +1,64 @@
+module corpus.strings.rabinkarp;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func rabinKarpSearch(text: Vec<int>, pattern: Vec<int>) -> int {
+    let n = veclen<int>(text);
+    let m = veclen<int>(pattern);
+    if (m > n) {
+        return -1;
+    }
+    let prime = 101;
+    let base = 256;
+    let mut patternHash = 0;
+    let mut textHash = 0;
+    let mut h = 1;
+    for (let mut i = 0; i < m - 1; i = i + 1) {
+        h = (h * base) % prime;
+    }
+    for (let mut i = 0; i < m; i = i + 1) {
+        patternHash = (base * patternHash + get<int>(pattern, i)) % prime;
+        textHash = (base * textHash + get<int>(text, i)) % prime;
+    }
+    let limit = n - m + 1;
+    for (let mut i = 0; i < limit; i = i + 1) {
+        if (patternHash == textHash) {
+            let mut matches = 1;
+            for (let mut j = 0; j < m; j = j + 1) {
+                let ti = get<int>(text, i + j);
+                let pj = get<int>(pattern, j);
+                if (ti != pj) {
+                    matches = 0;
+                }
+            }
+            if (matches == 1) {
+                return i;
+            }
+        }
+        if (i < n - m) {
+            let ti = get<int>(text, i);
+            let tim = get<int>(text, i + m);
+            textHash = (base * (textHash - ti * h) + tim) % prime;
+            if (textHash < 0) {
+                textHash = textHash + prime;
+            }
+        }
+    }
+    return -1;
+}
+
+pub func main() -> int {
+    let mut text: Vec<int> = vecNew<int>();
+    text = push<int>(text, 72); // H
+    text = push<int>(text, 69); // E
+    text = push<int>(text, 76); // L
+    text = push<int>(text, 76); // L
+    text = push<int>(text, 79); // O
+    let mut pat: Vec<int> = vecNew<int>();
+    pat = push<int>(pat, 76); // L
+    pat = push<int>(pat, 76); // L
+    let pos = rabinKarpSearch(text, pat);
+    outln($"Rabin-Karp match index: {pos:str}");
+    return 0;
+}

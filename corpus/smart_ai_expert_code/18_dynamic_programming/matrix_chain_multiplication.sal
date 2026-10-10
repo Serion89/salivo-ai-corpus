@@ -1,0 +1,45 @@
+module corpus.dp.mcm;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func mcmCost(p: Vec<int>, n: int) -> int {
+    let mut dp: Vec<int> = vecNew<int>();
+    let total = n * n;
+    for (let mut i = 0; i < total; i = i + 1) {
+        dp = push<int>(dp, 0);
+    }
+    let inf = 999999999;
+    for (let mut l = 2; l < n; l = l + 1) {
+        let limit = n - l + 1;
+        for (let mut i = 1; i < limit; i = i + 1) {
+            let j = i + l - 1;
+            set<int>(dp, i * n + j, inf);
+            for (let mut k = i; k < j; k = k + 1) {
+                let cost1 = get<int>(dp, i * n + k);
+                let cost2 = get<int>(dp, (k + 1) * n + j);
+                let p_i1 = get<int>(p, i - 1);
+                let p_k = get<int>(p, k);
+                let p_j = get<int>(p, j);
+                let mult = cost1 + cost2 + (p_i1 * p_k * p_j);
+                let curMin = get<int>(dp, i * n + j);
+                if (mult < curMin) {
+                    set<int>(dp, i * n + j, mult);
+                }
+            }
+        }
+    }
+    return get<int>(dp, 1 * n + (n - 1));
+}
+
+pub func main() -> int {
+    let mut dims: Vec<int> = vecNew<int>();
+    dims = push<int>(dims, 10);
+    dims = push<int>(dims, 20);
+    dims = push<int>(dims, 30);
+    dims = push<int>(dims, 40);
+    dims = push<int>(dims, 30);
+    let minCost = mcmCost(dims, 5);
+    outln($"Optimal Matrix Chain Multiplication Cost: {minCost:str}");
+    return 0;
+}

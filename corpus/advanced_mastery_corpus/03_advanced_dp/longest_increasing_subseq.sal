@@ -1,0 +1,47 @@
+module corpus.dp.lis;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func lisLength(arr: Vec<int>) -> int {
+    let n = veclen<int>(arr);
+    if (n == 0) {
+        return 0;
+    }
+    let mut tails: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < n; i = i + 1) {
+        let x = get<int>(arr, i);
+        let mut left = 0;
+        let mut right = veclen<int>(tails);
+        while (left < right) {
+            let mid = (left + right) / 2;
+            let val = get<int>(tails, mid);
+            if (val < x) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        if (left == veclen<int>(tails)) {
+            tails = push<int>(tails, x);
+        } else {
+            set<int>(tails, left, x);
+        }
+    }
+    return veclen<int>(tails);
+}
+
+pub func main() -> int {
+    let mut arr: Vec<int> = vecNew<int>();
+    arr = push<int>(arr, 10);
+    arr = push<int>(arr, 9);
+    arr = push<int>(arr, 2);
+    arr = push<int>(arr, 5);
+    arr = push<int>(arr, 3);
+    arr = push<int>(arr, 7);
+    arr = push<int>(arr, 101);
+    arr = push<int>(arr, 18);
+    let len = lisLength(arr);
+    outln($"LIS Length: {len:str}");
+    return 0;
+}

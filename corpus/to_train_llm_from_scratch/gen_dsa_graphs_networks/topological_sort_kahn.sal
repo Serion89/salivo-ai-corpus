@@ -1,0 +1,58 @@
+module corpus.graphs.toposort;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func topoSort(adj: Vec<int>, n: int) -> Vec<int> {
+    let mut inDegree: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < n; i = i + 1) {
+        inDegree = push<int>(inDegree, 0);
+    }
+    for (let mut u = 0; u < n; u = u + 1) {
+        for (let mut v = 0; v < n; v = v + 1) {
+            let edge = get<int>(adj, u * n + v);
+            if (edge == 1) {
+                let cur = get<int>(inDegree, v);
+                set<int>(inDegree, v, cur + 1);
+            }
+        }
+    }
+    let mut queue: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < n; i = i + 1) {
+        let deg = get<int>(inDegree, i);
+        if (deg == 0) {
+            queue = push<int>(queue, i);
+        }
+    }
+    let mut order: Vec<int> = vecNew<int>();
+    let mut head = 0;
+    while (head < veclen<int>(queue)) {
+        let u = get<int>(queue, head);
+        head = head + 1;
+        order = push<int>(order, u);
+        for (let mut v = 0; v < n; v = v + 1) {
+            let edge = get<int>(adj, u * n + v);
+            if (edge == 1) {
+                let cur = get<int>(inDegree, v);
+                set<int>(inDegree, v, cur - 1);
+                if (cur - 1 == 0) {
+                    queue = push<int>(queue, v);
+                }
+            }
+        }
+    }
+    return order;
+}
+
+pub func main() -> int {
+    let mut adj: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 9; i = i + 1) {
+        adj = push<int>(adj, 0);
+    }
+    set<int>(adj, 0 * 3 + 1, 1);
+    set<int>(adj, 1 * 3 + 2, 1);
+    let order = topoSort(adj, 3);
+    let count = veclen<int>(order);
+    outln($"Topological order node count: {count:str}");
+    return 0;
+}

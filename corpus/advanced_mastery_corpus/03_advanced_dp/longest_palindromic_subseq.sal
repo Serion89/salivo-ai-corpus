@@ -1,0 +1,55 @@
+module corpus.dp.lps;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func maxVal(a: int, b: int) -> int {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+pub func lpsLength(s: Vec<int>) -> int {
+    let n = veclen<int>(s);
+    let mut dp: Vec<int> = vecNew<int>();
+    let total = n * n;
+    for (let mut i = 0; i < total; i = i + 1) {
+        dp = push<int>(dp, 0);
+    }
+    for (let mut i = 0; i < n; i = i + 1) {
+        set<int>(dp, i * n + i, 1);
+    }
+    for (let mut len = 2; len <= n; len = len + 1) {
+        let limit = n - len + 1;
+        for (let mut i = 0; i < limit; i = i + 1) {
+            let j = i + len - 1;
+            let chI = get<int>(s, i);
+            let chJ = get<int>(s, j);
+            if (chI == chJ && len == 2) {
+                set<int>(dp, i * n + j, 2);
+            } else {
+                if (chI == chJ) {
+                    let inner = get<int>(dp, (i + 1) * n + (j - 1));
+                    set<int>(dp, i * n + j, inner + 2);
+                } else {
+                    let opt1 = get<int>(dp, (i + 1) * n + j);
+                    let opt2 = get<int>(dp, i * n + (j - 1));
+                    set<int>(dp, i * n + j, maxVal(opt1, opt2));
+                }
+            }
+        }
+    }
+    return get<int>(dp, 0 * n + (n - 1));
+}
+
+pub func main() -> int {
+    let mut s: Vec<int> = vecNew<int>();
+    s = push<int>(s, 66); // 'B'
+    s = push<int>(s, 66); // 'B'
+    s = push<int>(s, 65); // 'A'
+    s = push<int>(s, 66); // 'B'
+    let ans = lpsLength(s);
+    outln($"Longest Palindromic Subsequence Length: {ans:str}");
+    return 0;
+}

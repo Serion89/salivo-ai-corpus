@@ -1,0 +1,45 @@
+module corpus.dsa.avl;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct AvlNode {
+    int key;
+    int height;
+    int left;
+    int right;
+}
+
+pub func maxVal(a: int, b: int) -> int {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+pub func getNodeHeight(nodes: Vec<AvlNode>, idx: int) -> int {
+    if (idx < 0) {
+        return 0;
+    }
+    let node = get<AvlNode>(nodes, idx);
+    return node.height;
+}
+
+pub func getBalance(nodes: Vec<AvlNode>, idx: int) -> int {
+    if (idx < 0) {
+        return 0;
+    }
+    let node = get<AvlNode>(nodes, idx);
+    let lh = getNodeHeight(nodes, node.left);
+    let rh = getNodeHeight(nodes, node.right);
+    return lh - rh;
+}
+
+pub func main() -> int {
+    let mut nodes: Vec<AvlNode> = vecNew<AvlNode>();
+    let root = AvlNode { key: 10, height: 1, left: -1, right: -1 };
+    nodes = push<AvlNode>(nodes, root);
+    let bal = getBalance(nodes, 0);
+    outln($"AVL Root Balance Factor: {bal:str}");
+    return 0;
+}

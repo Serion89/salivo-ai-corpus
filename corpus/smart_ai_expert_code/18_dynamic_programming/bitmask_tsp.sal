@@ -1,0 +1,63 @@
+module corpus.dp.tsp;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func tspMinCost(dist: Vec<int>, n: int) -> int {
+    let totalStates = 1 << n;
+    let mut dp: Vec<int> = vecNew<int>();
+    let inf = 999999;
+    let size = totalStates * n;
+    for (let mut i = 0; i < size; i = i + 1) {
+        dp = push<int>(dp, inf);
+    }
+    set<int>(dp, 1 * n + 0, 0);
+
+    for (let mut mask = 1; mask < totalStates; mask = mask + 1) {
+        for (let mut u = 0; u < n; u = u + 1) {
+            let uVisited = (mask >> u) & 1;
+            let currentCost = get<int>(dp, mask * n + u);
+            if (uVisited == 1 && currentCost < inf) {
+                for (let mut v = 0; v < n; v = v + 1) {
+                    let vVisited = (mask >> v) & 1;
+                    if (vVisited == 0) {
+                        let nextMask = mask | (1 << v);
+                        let edgeCost = get<int>(dist, u * n + v);
+                        let newCost = currentCost + edgeCost;
+                        let oldCost = get<int>(dp, nextMask * n + v);
+                        if (newCost < oldCost) {
+                            set<int>(dp, nextMask * n + v, newCost);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    let finalMask = totalStates - 1;
+    let mut ans = inf;
+    for (let mut u = 1; u < n; u = u + 1) {
+        let returnCost = get<int>(dist, u * n + 0);
+        let pathCost = get<int>(dp, finalMask * n + u);
+        let total = pathCost + returnCost;
+        if (total < ans) {
+            ans = total;
+        }
+    }
+    return ans;
+}
+
+pub func main() -> int {
+    let mut matrix: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 9; i = i + 1) {
+        matrix = push<int>(matrix, 0);
+    }
+    set<int>(matrix, 0 * 3 + 1, 10);
+    set<int>(matrix, 1 * 3 + 0, 10);
+    set<int>(matrix, 1 * 3 + 2, 15);
+    set<int>(matrix, 2 * 3 + 1, 15);
+    set<int>(matrix, 0 * 3 + 2, 20);
+    set<int>(matrix, 2 * 3 + 0, 20);
+    let cost = tspMinCost(matrix, 3);
+    outln($"TSP Minimal Tour Cost: {cost:str}");
+    return 0;
+}

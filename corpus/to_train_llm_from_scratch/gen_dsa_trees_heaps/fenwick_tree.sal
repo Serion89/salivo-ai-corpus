@@ -1,0 +1,49 @@
+module corpus.dsa.fenwick;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct FenwickTree {
+    int size;
+    Vec<int> tree;
+}
+
+pub func fenwickNew(n: int) -> FenwickTree {
+    let mut t: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i <= n; i = i + 1) {
+        t = push<int>(t, 0);
+    }
+    return FenwickTree { size: n, tree: t };
+}
+
+pub func fenwickUpdate(ft: FenwickTree, idx: int, delta: int) {
+    let mut i = idx;
+    while (i <= ft.size) {
+        let current = get<int>(ft.tree, i);
+        set<int>(ft.tree, i, current + delta);
+        let lsb = i & (-i);
+        i = i + lsb;
+    }
+}
+
+pub func fenwickQuery(ft: FenwickTree, idx: int) -> int {
+    let mut sum = 0;
+    let mut i = idx;
+    while (i > 0) {
+        let val = get<int>(ft.tree, i);
+        sum = sum + val;
+        let lsb = i & (-i);
+        i = i - lsb;
+    }
+    return sum;
+}
+
+pub func main() -> int {
+    let ft = fenwickNew(10);
+    fenwickUpdate(ft, 1, 5);
+    fenwickUpdate(ft, 2, 3);
+    fenwickUpdate(ft, 3, 7);
+    let p = fenwickQuery(ft, 3);
+    outln($"Prefix sum at 3: {p:str}");
+    return 0;
+}

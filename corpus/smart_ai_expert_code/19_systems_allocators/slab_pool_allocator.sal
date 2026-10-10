@@ -1,0 +1,51 @@
+module corpus.systems.slab;
+
+><salivo.std.core::{outln, Drop};
+><salivo.std.mem::{allocate, deallocate};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct SlabPool {
+    int memoryPtr;
+    int chunkSize;
+    int totalChunks;
+    Vec<int> freeList;
+}
+
+pub func slabCreate(chunkSize: int, count: int) -> SlabPool {
+    let totalBytes = chunkSize * count;
+    let ptr = allocate(totalBytes, 8);
+    let mut fl: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < count; i = i + 1) {
+        fl = push<int>(fl, i);
+    }
+    return SlabPool {
+        memoryPtr: ptr,
+        chunkSize: chunkSize,
+        totalChunks: count,
+        freeList: fl,
+    };
+}
+
+pub func slabAlloc(pool: SlabPool) -> int {
+    let len = veclen<int>(pool.freeList);
+    if (len == 0) {
+        return 0;
+    }
+    let idx = get<int>(pool.freeList, len - 1);
+    let result = pool.memoryPtr + (idx * pool.chunkSize);
+    return result;
+}
+
+impl Drop for SlabPool {
+    func drop(self) {
+        deallocate(self.memoryPtr, self.chunkSize * self.totalChunks, 8);
+        outln("[Slab] Reclaimed slab pool memory via Drop.");
+    }
+}
+
+pub func main() -> int {
+    let pool = slabCreate(64, 16);
+    let block = slabAlloc(pool);
+    outln("Allocated fixed-size block from Slab Pool.");
+    return 0;
+}

@@ -1,0 +1,24 @@
+module corpus.parsers.huffman;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct HuffmanNode {
+    int symbol;
+    int frequency;
+    int left;
+    int right;
+}
+
+pub func huffmanNewNode(sym: int, freq: int) -> HuffmanNode {
+    return HuffmanNode { symbol: sym, frequency: freq, left: -1, right: -1 };
+}
+
+pub func main() -> int {
+    let mut tree: Vec<HuffmanNode> = vecNew<HuffmanNode>();
+    tree = push<HuffmanNode>(tree, huffmanNewNode(65, 5));
+    tree = push<HuffmanNode>(tree, huffmanNewNode(66, 9));
+    let n = veclen<HuffmanNode>(tree);
+    outln($"Huffman leaf nodes initialized: {n:str}");
+    return 0;
+}

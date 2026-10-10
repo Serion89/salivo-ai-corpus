@@ -1,0 +1,35 @@
+module corpus.parsers.json;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub enum JsonTokenType {
+    LeftBrace,
+    RightBrace,
+    LeftBracket,
+    RightBracket,
+    Colon,
+    Comma,
+    StringLit,
+    NumberLit,
+}
+
+pub func tokenizeChar(ch: int) -> int {
+    if (ch == 123) { return 1; } // {
+    if (ch == 125) { return 2; } // }
+    if (ch == 91)  { return 3; } // [
+    if (ch == 93)  { return 4; } // ]
+    if (ch == 58)  { return 5; } // :
+    if (ch == 44)  { return 6; } // ,
+    return 0;
+}
+
+pub func main() -> int {
+    let mut chars: Vec<int> = vecNew<int>();
+    chars = push<int>(chars, 123); // '{'
+    chars = push<int>(chars, 125); // '}'
+    let t1 = tokenizeChar(get<int>(chars, 0));
+    let t2 = tokenizeChar(get<int>(chars, 1));
+    outln($"JSON tokens: {t1:str}, {t2:str}");
+    return 0;
+}

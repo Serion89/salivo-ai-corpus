@@ -1,0 +1,58 @@
+module corpus.graphs.dijkstra;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func dijkstra(adj: Vec<int>, numVertices: int, startNode: int) -> Vec<int> {
+    let mut dist: Vec<int> = vecNew<int>();
+    let mut visited: Vec<int> = vecNew<int>();
+    let inf = 999999;
+    for (let mut i = 0; i < numVertices; i = i + 1) {
+        dist = push<int>(dist, inf);
+        visited = push<int>(visited, 0);
+    }
+    set<int>(dist, startNode, 0);
+
+    for (let mut step = 0; step < numVertices; step = step + 1) {
+        let mut minDist = inf;
+        let mut u = -1;
+        for (let mut v = 0; v < numVertices; v = v + 1) {
+            let isVis = get<int>(visited, v);
+            let d = get<int>(dist, v);
+            if (isVis == 0 && d < minDist) {
+                minDist = d;
+                u = v;
+            }
+        }
+        if (u < 0) {
+            return dist;
+        }
+        set<int>(visited, u, 1);
+        for (let mut v = 0; v < numVertices; v = v + 1) {
+            let weight = get<int>(adj, u * numVertices + v);
+            let isVis = get<int>(visited, v);
+            if (weight > 0 && isVis == 0) {
+                let currentDist = get<int>(dist, v);
+                let newDist = minDist + weight;
+                if (newDist < currentDist) {
+                    set<int>(dist, v, newDist);
+                }
+            }
+        }
+    }
+    return dist;
+}
+
+pub func main() -> int {
+    let mut adj: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 9; i = i + 1) {
+        adj = push<int>(adj, 0);
+    }
+    set<int>(adj, 0 * 3 + 1, 4);
+    set<int>(adj, 0 * 3 + 2, 10);
+    set<int>(adj, 1 * 3 + 2, 2);
+    let dist = dijkstra(adj, 3, 0);
+    let target = get<int>(dist, 2);
+    outln($"Shortest path from 0 to 2: {target:str}");
+    return 0;
+}

@@ -1,0 +1,30 @@
+module corpus.crypto.fnv;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub func fnv1a(data: Vec<int>) -> int {
+    let offsetBasis = 2166136261;
+    let prime = 16777619;
+    let mut hash = offsetBasis;
+    let n = veclen<int>(data);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let b = get<int>(data, i);
+        hash = hash ^ b;
+        hash = hash * prime;
+    }
+    return hash;
+}
+
+pub func main() -> int {
+    let mut bytes: Vec<int> = vecNew<int>();
+    bytes = push<int>(bytes, 83);
+    bytes = push<int>(bytes, 97);
+    bytes = push<int>(bytes, 108);
+    bytes = push<int>(bytes, 105);
+    bytes = push<int>(bytes, 118);
+    bytes = push<int>(bytes, 111);
+    let h = fnv1a(bytes);
+    outln($"FNV-1a Hash of 'Salivo': {h:str}");
+    return 0;
+}

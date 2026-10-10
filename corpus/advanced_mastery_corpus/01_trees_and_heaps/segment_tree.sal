@@ -1,0 +1,48 @@
+module corpus.dsa.segtree;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct SegmentTree {
+    int size;
+    Vec<int> tree;
+}
+
+pub func buildTree(arr: Vec<int>, n: int) -> SegmentTree {
+    let mut treeVec: Vec<int> = vecNew<int>();
+    let total = n * 4;
+    for (let mut i = 0; i < total; i = i + 1) {
+        treeVec = push<int>(treeVec, 0);
+    }
+    return SegmentTree { size: n, tree: treeVec };
+}
+
+pub func updatePoint(st: SegmentTree, node: int, start: int, end: int, idx: int, val: int) {
+    if (start == end) {
+        set<int>(st.tree, node, val);
+        return;
+    }
+    let mid = (start + end) / 2;
+    let leftNode = node * 2 + 1;
+    let rightNode = node * 2 + 2;
+    if (idx <= mid) {
+        updatePoint(st, leftNode, start, mid, idx, val);
+    } else {
+        updatePoint(st, rightNode, mid + 1, end, idx, val);
+    }
+    let leftSum = get<int>(st.tree, leftNode);
+    let rightSum = get<int>(st.tree, rightNode);
+    set<int>(st.tree, node, leftSum + rightSum);
+}
+
+pub func main() -> int {
+    let mut arr: Vec<int> = vecNew<int>();
+    arr = push<int>(arr, 1);
+    arr = push<int>(arr, 3);
+    arr = push<int>(arr, 5);
+    let st = buildTree(arr, 3);
+    updatePoint(st, 0, 0, 2, 1, 10);
+    let total = get<int>(st.tree, 0);
+    outln($"Segment Tree Root Aggregate: {total:str}");
+    return 0;
+}

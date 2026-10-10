@@ -1,0 +1,45 @@
+module corpus.graphs.bfs;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func bfsDistances(adj: Vec<int>, numVertices: int, src: int) -> Vec<int> {
+    let mut dist: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < numVertices; i = i + 1) {
+        dist = push<int>(dist, -1);
+    }
+    let mut queue: Vec<int> = vecNew<int>();
+    queue = push<int>(queue, src);
+    set<int>(dist, src, 0);
+    let mut head = 0;
+
+    while (head < veclen<int>(queue)) {
+        let u = get<int>(queue, head);
+        head = head + 1;
+        let d = get<int>(dist, u);
+
+        for (let mut v = 0; v < numVertices; v = v + 1) {
+            let hasEdge = get<int>(adj, u * numVertices + v);
+            let visited = get<int>(dist, v);
+            if (hasEdge == 1 && visited < 0) {
+                set<int>(dist, v, d + 1);
+                queue = push<int>(queue, v);
+            }
+        }
+    }
+    return dist;
+}
+
+pub func main() -> int {
+    let mut adj: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 16; i = i + 1) {
+        adj = push<int>(adj, 0);
+    }
+    set<int>(adj, 0 * 4 + 1, 1);
+    set<int>(adj, 1 * 4 + 2, 1);
+    set<int>(adj, 2 * 4 + 3, 1);
+    let dist = bfsDistances(adj, 4, 0);
+    let hop = get<int>(dist, 3);
+    outln($"Hops to node 3: {hop:str}");
+    return 0;
+}

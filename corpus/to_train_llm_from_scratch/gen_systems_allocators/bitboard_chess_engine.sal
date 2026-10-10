@@ -1,0 +1,49 @@
+module corpus.systems.bitboard;
+
+><salivo.std.core::{outln};
+
+pub struct Bitboard {
+    int bits;
+}
+
+pub func bitboardNew() -> Bitboard {
+    return Bitboard { bits: 0 };
+}
+
+pub func setSquare(bb: Bitboard, square: int) {
+    let mask = 1 << square;
+    bb.bits = bb.bits | mask;
+}
+
+pub func clearSquare(bb: Bitboard, square: int) {
+    let mask = 1 << square;
+    bb.bits = bb.bits & (~mask);
+}
+
+pub func isOccupied(bb: Bitboard, square: int) -> int {
+    let mask = 1 << square;
+    if ((bb.bits & mask) != 0) {
+        return 1;
+    }
+    return 0;
+}
+
+pub func popCount(bb: Bitboard) -> int {
+    let mut count = 0;
+    let mut b = bb.bits;
+    while (b != 0) {
+        b = b & (b - 1);
+        count = count + 1;
+    }
+    return count;
+}
+
+pub func main() -> int {
+    let bb = bitboardNew();
+    setSquare(bb, 0);
+    setSquare(bb, 7);
+    setSquare(bb, 63);
+    let totalPieces = popCount(bb);
+    outln($"Bitboard piece count: {totalPieces:str}");
+    return 0;
+}

@@ -1,0 +1,50 @@
+module corpus.dsa.ringbuf;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct RingBuffer {
+    Vec<int> buffer;
+    int capacity;
+    int head;
+    int tail;
+    int count;
+}
+
+pub func ringNew(capacity: int) -> RingBuffer {
+    let mut b: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < capacity; i = i + 1) {
+        b = push<int>(b, 0);
+    }
+    return RingBuffer { buffer: b, capacity: capacity, head: 0, tail: 0, count: 0 };
+}
+
+pub func ringPush(rb: RingBuffer, val: int) -> int {
+    if (rb.count >= rb.capacity) {
+        return -1;
+    }
+    set<int>(rb.buffer, rb.tail, val);
+    rb.tail = (rb.tail + 1) % rb.capacity;
+    rb.count = rb.count + 1;
+    return 0;
+}
+
+pub func ringPop(rb: RingBuffer) -> int {
+    if (rb.count == 0) {
+        return -1;
+    }
+    let val = get<int>(rb.buffer, rb.head);
+    rb.head = (rb.head + 1) % rb.capacity;
+    rb.count = rb.count - 1;
+    return val;
+}
+
+pub func main() -> int {
+    let rb = ringNew(4);
+    ringPush(rb, 100);
+    ringPush(rb, 200);
+    ringPush(rb, 300);
+    let popped = ringPop(rb);
+    outln($"Popped FIFO item: {popped:str}, remaining count: {rb.count:str}");
+    return 0;
+}

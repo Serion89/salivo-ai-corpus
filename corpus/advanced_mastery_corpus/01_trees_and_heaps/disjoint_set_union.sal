@@ -1,0 +1,60 @@
+module corpus.dsa.dsu;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct DisjointSet {
+    Vec<int> parent;
+    Vec<int> rank;
+}
+
+pub func dsuNew(n: int) -> DisjointSet {
+    let mut p: Vec<int> = vecNew<int>();
+    let mut r: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < n; i = i + 1) {
+        p = push<int>(p, i);
+        r = push<int>(r, 0);
+    }
+    return DisjointSet { parent: p, rank: r };
+}
+
+pub func dsuFind(dsu: DisjointSet, x: int) -> int {
+    let p = get<int>(dsu.parent, x);
+    if (p == x) {
+        return x;
+    }
+    let root = dsuFind(dsu, p);
+    set<int>(dsu.parent, x, root);
+    return root;
+}
+
+pub func dsuUnion(dsu: DisjointSet, a: int, b: int) -> int {
+    let rootA = dsuFind(dsu, a);
+    let rootB = dsuFind(dsu, b);
+    if (rootA == rootB) {
+        return 0;
+    }
+    let rankA = get<int>(dsu.rank, rootA);
+    let rankB = get<int>(dsu.rank, rootB);
+    if (rankA < rankB) {
+        set<int>(dsu.parent, rootA, rootB);
+    } else {
+        if (rankA > rankB) {
+            set<int>(dsu.parent, rootB, rootA);
+        } else {
+            set<int>(dsu.parent, rootB, rootA);
+            set<int>(dsu.rank, rootA, rankA + 1);
+        }
+    }
+    return 1;
+}
+
+pub func main() -> int {
+    let dsu = dsuNew(5);
+    dsuUnion(dsu, 0, 1);
+    dsuUnion(dsu, 1, 2);
+    let root2 = dsuFind(dsu, 2);
+    let root0 = dsuFind(dsu, 0);
+    outln($"DSU Connected (0 and 2): {root2:str} == {root0:str}");
+    return 0;
+}

@@ -1,0 +1,39 @@
+module corpus.dp.coinchange;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func minCoins(coins: Vec<int>, amount: int) -> int {
+    let mut dp: Vec<int> = vecNew<int>();
+    let inf = 999999;
+    dp = push<int>(dp, 0);
+    for (let mut i = 1; i <= amount; i = i + 1) {
+        dp = push<int>(dp, inf);
+    }
+    let numCoins = veclen<int>(coins);
+    for (let mut i = 1; i <= amount; i = i + 1) {
+        for (let mut c = 0; c < numCoins; c = c + 1) {
+            let coin = get<int>(coins, c);
+            if (coin <= i) {
+                let prev = get<int>(dp, i - coin);
+                if (prev != inf) {
+                    let cur = get<int>(dp, i);
+                    if (prev + 1 < cur) {
+                        set<int>(dp, i, prev + 1);
+                    }
+                }
+            }
+        }
+    }
+    return get<int>(dp, amount);
+}
+
+pub func main() -> int {
+    let mut coins: Vec<int> = vecNew<int>();
+    coins = push<int>(coins, 1);
+    coins = push<int>(coins, 2);
+    coins = push<int>(coins, 5);
+    let res = minCoins(coins, 11);
+    outln($"Min coins for 11: {res:str}");
+    return 0;
+}

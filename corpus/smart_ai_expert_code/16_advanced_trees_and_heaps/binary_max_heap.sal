@@ -1,0 +1,44 @@
+module corpus.dsa.maxheap;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct MaxHeap {
+    Vec<int> data;
+}
+
+pub func maxHeapNew() -> MaxHeap {
+    return MaxHeap { data: vecNew<int>() };
+}
+
+pub func maxHeapPush(heap: MaxHeap, val: int) {
+    let mut v = heap.data;
+    v = push<int>(v, val);
+    let mut idx = veclen<int>(v) - 1;
+    while (idx > 0) {
+        let parent = (idx - 1) / 2;
+        let parentVal = get<int>(v, parent);
+        let currVal = get<int>(v, idx);
+        if (currVal > parentVal) {
+            set<int>(v, parent, currVal);
+            set<int>(v, idx, parentVal);
+            idx = parent;
+        } else {
+            return;
+        }
+    }
+}
+
+pub func maxHeapPeek(heap: MaxHeap) -> int {
+    return get<int>(heap.data, 0);
+}
+
+pub func main() -> int {
+    let h = maxHeapNew();
+    maxHeapPush(h, 15);
+    maxHeapPush(h, 99);
+    maxHeapPush(h, 42);
+    let m = maxHeapPeek(h);
+    outln($"Max heap top: {m:str}");
+    return 0;
+}

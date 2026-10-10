@@ -1,0 +1,40 @@
+module corpus.graphs.floydwarshall;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub func floydWarshall(matrix: Vec<int>, n: int) -> Vec<int> {
+    let mut dist = matrix;
+    for (let mut k = 0; k < n; k = k + 1) {
+        for (let mut i = 0; i < n; i = i + 1) {
+            for (let mut j = 0; j < n; j = j + 1) {
+                let d_ik = get<int>(dist, i * n + k);
+                let d_kj = get<int>(dist, k * n + j);
+                let d_ij = get<int>(dist, i * n + j);
+                if (d_ik < 999999 && d_kj < 999999) {
+                    let through_k = d_ik + d_kj;
+                    if (through_k < d_ij) {
+                        set<int>(dist, i * n + j, through_k);
+                    }
+                }
+            }
+        }
+    }
+    return dist;
+}
+
+pub func main() -> int {
+    let mut m: Vec<int> = vecNew<int>();
+    for (let mut i = 0; i < 9; i = i + 1) {
+        m = push<int>(m, 999999);
+    }
+    set<int>(m, 0 * 3 + 0, 0);
+    set<int>(m, 1 * 3 + 1, 0);
+    set<int>(m, 2 * 3 + 2, 0);
+    set<int>(m, 0 * 3 + 1, 5);
+    set<int>(m, 1 * 3 + 2, 3);
+    let res = floydWarshall(m, 3);
+    let shortest = get<int>(res, 0 * 3 + 2);
+    outln($"Floyd-Warshall 0->2: {shortest:str}");
+    return 0;
+}

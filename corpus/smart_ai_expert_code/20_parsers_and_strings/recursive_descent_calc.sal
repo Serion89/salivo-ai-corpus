@@ -1,0 +1,62 @@
+module corpus.parsers.calc;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, veclen};
+
+pub struct TokenStream {
+    Vec<int> tokens;
+    int pos;
+}
+
+pub func nextVal(ts: TokenStream) -> int {
+    let val = get<int>(ts.tokens, ts.pos);
+    ts.pos = ts.pos + 1;
+    return val;
+}
+
+pub func evalFactor(ts: TokenStream) -> int {
+    return nextVal(ts);
+}
+
+pub func evalTerm(ts: TokenStream) -> int {
+    let mut left = evalFactor(ts);
+    while (ts.pos < veclen<int>(ts.tokens)) {
+        let op = get<int>(ts.tokens, ts.pos);
+        if (op == 42) {
+            ts.pos = ts.pos + 1;
+            let right = evalFactor(ts);
+            left = left * right;
+        } else {
+            return left;
+        }
+    }
+    return left;
+}
+
+pub func evalExpr(ts: TokenStream) -> int {
+    let mut left = evalTerm(ts);
+    while (ts.pos < veclen<int>(ts.tokens)) {
+        let op = get<int>(ts.tokens, ts.pos);
+        if (op == 43) {
+            ts.pos = ts.pos + 1;
+            let right = evalTerm(ts);
+            left = left + right;
+        } else {
+            return left;
+        }
+    }
+    return left;
+}
+
+pub func main() -> int {
+    let mut toks: Vec<int> = vecNew<int>();
+    toks = push<int>(toks, 5);
+    toks = push<int>(toks, 43);
+    toks = push<int>(toks, 3);
+    toks = push<int>(toks, 42);
+    toks = push<int>(toks, 2);
+    let ts = TokenStream { tokens: toks, pos: 0 };
+    let result = evalExpr(ts);
+    outln($"AST Evaluation 5 + (3 * 2): {result:str}");
+    return 0;
+}

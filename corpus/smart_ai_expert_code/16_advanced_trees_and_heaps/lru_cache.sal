@@ -1,0 +1,70 @@
+module corpus.dsa.lru;
+
+><salivo.std.core::{outln};
+><salivo.std.collections::{Vec, vecNew, push, get, set, veclen};
+
+pub struct CacheEntry {
+    int key;
+    int value;
+    int age;
+}
+
+pub struct LruCache {
+    Vec<CacheEntry> entries;
+    int capacity;
+    int tick;
+}
+
+pub func lruNew(capacity: int) -> LruCache {
+    return LruCache { entries: vecNew<CacheEntry>(), capacity: capacity, tick: 0 };
+}
+
+pub func lruPut(cache: LruCache, key: int, value: int) {
+    cache.tick = cache.tick + 1;
+    let n = veclen<CacheEntry>(cache.entries);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let e = get<CacheEntry>(cache.entries, i);
+        if (e.key == key) {
+            set<CacheEntry>(cache.entries, i, CacheEntry { key: key, value: value, age: cache.tick });
+            return;
+        }
+    }
+    if (n >= cache.capacity) {
+        let mut oldestIdx = 0;
+        let mut oldestAge = get<CacheEntry>(cache.entries, 0).age;
+        for (let mut i = 1; i < n; i = i + 1) {
+            let curAge = get<CacheEntry>(cache.entries, i).age;
+            if (curAge < oldestAge) {
+                oldestAge = curAge;
+                oldestIdx = i;
+            }
+        }
+        set<CacheEntry>(cache.entries, oldestIdx, CacheEntry { key: key, value: value, age: cache.tick });
+    } else {
+        cache.entries = push<CacheEntry>(cache.entries, CacheEntry { key: key, value: value, age: cache.tick });
+    }
+}
+
+pub func lruGet(cache: LruCache, key: int) -> int {
+    let n = veclen<CacheEntry>(cache.entries);
+    for (let mut i = 0; i < n; i = i + 1) {
+        let e = get<CacheEntry>(cache.entries, i);
+        if (e.key == key) {
+            cache.tick = cache.tick + 1;
+            set<CacheEntry>(cache.entries, i, CacheEntry { key: key, value: e.value, age: cache.tick });
+            return e.value;
+        }
+    }
+    return -1;
+}
+
+pub func main() -> int {
+    let lru = lruNew(2);
+    lruPut(lru, 1, 100);
+    lruPut(lru, 2, 200);
+    let v1 = lruGet(lru, 1);
+    lruPut(lru, 3, 300);
+    let evicted2 = lruGet(lru, 2);
+    outln($"LRU key 1={v1:str}, key 2={evicted2:str} (evicted)");
+    return 0;
+}
